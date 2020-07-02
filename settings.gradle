@@ -1,0 +1,2 @@
+rootProject.name='VideoToPhotoClone'
+include ':app'

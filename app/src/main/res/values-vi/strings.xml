@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">VideoToPhotoClone</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="SelectedVideo">Chọn Video</string>
+    <string name="Gallery">Bộ Sưu tập</string>
+    <string name="SlideshowMaker">Tạo trình diễn</string>
+    <string name="Settings">Cài Đặt</string>
+    <string name="Share">Chia sẻ</string>
+    <string name="RateUs">Đánh giá</string>
+    <string name="AboutUs">Thông tin</string>
+    <string name="Author">Tác giả</string>
+    <string name="PrivacyPolicy">Điều khoản-Chính sách</string>
+    <string name="Email">Email</string>
+    <string name="ClearAll">Xóa tất cả</string>
+    <string name="Videos">Videos</string>
+    <string name="Images">Hình ảnh</string>
+    <string name="Cancel">Hủy</string>
+    <string name="Ok">Đồng ý</string>
+    <string name="Rename">Đổi tên</string>
+    <string name="Option">Tùy chọn</string>
+    <string name="Open">Mở</string>
+    <string name="Delete">Xóa</string>
+    <string name="Details">Chi tiết</string>
+    <string name="Cut">Cắt</string>
+    <string name="Text">Chèn chữ</string>
+    <string name="Sticker">Sticker</string>
+    <string name="paint">Vẽ</string>
+    <string name="ShowVideo">Phát video</string>
+</resources>

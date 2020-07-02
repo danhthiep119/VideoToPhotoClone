@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.videotophotoclone.MainFragment"
+        android:label="Video to Photo"
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_selectedFragment"
+            app:destination="@id/selectedFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_slideshowMakerFragment"
+            app:destination="@id/slideshowMakerFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_galleryFragment"
+            app:destination="@id/galleryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/selectedFragment"
+        android:name="com.example.videotophotoclone.SelectedFragment"
+        android:label="@string/SelectedVideo"
+        tools:layout="@layout/fragment_selected" />
+    <fragment
+        android:id="@+id/slideshowMakerFragment"
+        android:name="com.example.videotophotoclone.SlideshowMakerFragment"
+        android:label="@string/SlideshowMaker"
+        tools:layout="@layout/fragment_slideshow_maker" />
+    <fragment
+        android:id="@+id/galleryFragment"
+        android:name="com.example.videotophotoclone.GalleryFragment"
+        android:label="@string/Gallery"
+        tools:layout="@layout/fragment_gallery" >
+        <argument
+            android:name="videoPath"
+            app:argType="string"
+            android:defaultValue="null"
+            />
+        <action
+            android:id="@+id/action_galleryFragment_to_editPhotoFragment2"
+            app:destination="@id/editPhotoFragment2" />
+        <action
+            android:id="@+id/action_galleryFragment_to_showVideo"
+            app:destination="@id/showVideo">
+            <argument
+                android:name="videoPath"
+                app:argType="string"
+                android:defaultValue="null"
+                />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/editPhotoFragment2"
+        android:name="com.example.videotophotoclone.EditPhotoFragment"
+        android:label="EditPhotoFragment" />
+    <fragment
+        android:id="@+id/showVideo"
+        android:name="com.example.videotophotoclone.ShowVideo"
+        android:label="@string/ShowVideo"
+        tools:layout="@layout/fragment_show_video" />
+</navigation>

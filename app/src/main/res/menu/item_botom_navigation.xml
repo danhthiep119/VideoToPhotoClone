@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title="@string/Share"
+        android:id="@+id/Share"
+        android:icon="@drawable/ic_share_black_75dp"
+        />
+    <item
+        android:title="@string/RateUs"
+        android:id="@+id/Rate"
+        android:icon="@drawable/ic_star_black_24dp"
+        />
+    <item
+        android:title="@string/AboutUs"
+        android:id="@+id/About"
+        android:icon="@drawable/ic_info_black_24dp"
+        />
+</menu>

@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">VideoToPhotoClone</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="SelectedVideo">Selected Video</string>
+    <string name="Gallery">Gallery</string>
+    <string name="SlideshowMaker">Slideshow Maker</string>
+    <string name="Settings">Settings</string>
+    <string name="Share">Share</string>
+    <string name="RateUs">Rate Us</string>
+    <string name="AboutUs">About Us</string>
+    <string name="Author">Author</string>
+    <string name="PrivacyPolicy">Privacy Policy</string>
+    <string name="Email">Email</string>
+    <string name="ClearAll">Clear All</string>
+    <string name="Videos">Videos</string>
+    <string name="Images">Images</string>
+    <string name="Cancel">Cancel</string>
+    <string name="Ok">Ok</string>
+    <string name="Rename">Rename</string>
+    <string name="Option">Option</string>
+    <string name="Open">Open</string>
+    <string name="Delete">Delete</string>
+    <string name="Details">Details</string>
+    <string name="Cut">Cut</string>
+    <string name="Text">Text</string>
+    <string name="Sticker">Sticker</string>
+    <string name="paint">Paint</string>
+    <string name="ShowVideo">Show Video</string>
+</resources>
