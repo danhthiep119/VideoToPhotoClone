@@ -1,4 +1,4 @@
-package com.example.videotophotoclone;
+package com.example.videotophotoclone.View;
 
 import android.os.Bundle;
 
@@ -19,6 +19,10 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.example.videotophotoclone.Controler.FolderRecycleView;
+import com.example.videotophotoclone.Controler.ImageAdapter;
+import com.example.videotophotoclone.R;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +32,9 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class SlideshowMakerFragment extends Fragment {
-    List<String> folderList=new ArrayList<>();
-    List<Integer> imageList = new ArrayList<Integer>();
-    List<Integer> imageSelected = new ArrayList<Integer>();
+    List<File> folderList=new ArrayList<>();
+    List<File> imageList = new ArrayList<>();
+    List<File> imageSelected = new ArrayList<>();
     Button btnClear;
     GridView GvImage,GvSelected;
     RecyclerView GvFolder;
@@ -38,7 +42,6 @@ public class SlideshowMakerFragment extends Fragment {
     ImageAdapter adapter;
     public SlideshowMakerFragment() {
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,14 +63,16 @@ public class SlideshowMakerFragment extends Fragment {
         GvImage=view.findViewById(R.id.GvImage);
         GvSelected=view.findViewById(R.id.GvSelected);
         btnClear=view.findViewById(R.id.btnClear);
-        storingFolderExternal();
-        fakeData();
+        File file= Environment.getExternalStorageDirectory();
+        folderList.clear();
+        imageList.clear();
+        storingFolderExternal(file);
+        getListImage();
         imageSelected.clear();
         GvImage.setAdapter(new ImageAdapter(imageList,getContext()));
         GvImage.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                imageSelected.add(imageList.get(position));
                 Toast.makeText(getContext(),"Bạn chọn "+imageList.get(position),Toast.LENGTH_SHORT).show();
                 adapter.notifyDataSetChanged();
             }
@@ -83,23 +88,28 @@ public class SlideshowMakerFragment extends Fragment {
         });
     }
 
-    void fakeData(){
-        imageList.clear();
-        imageList.add(R.drawable.ic_brush_black_24dp);
-        imageList.add(R.drawable.ic_info_black_24dp);
-        imageList.add(R.drawable.ic_personal_video_black_75dp);
-        imageList.add(R.drawable.ic_star_half_black_35dp);
-        imageList.add(R.drawable.ic_picture_in_picture_black_75dp);
-        imageList.add(R.drawable.ic_folder_black_24dp);
-        imageList.add(R.drawable.ic_content_cut_black_35dp);
+    private void getListImage() {
+
     }
 
-    private void storingFolderExternal() {
-        folderList.clear();
-        File file=new File(Environment.getRootDirectory().getName());
+
+    private void storingFolderExternal(File file) {
         File[] files = file.listFiles();
         for(File f: files ){
-            folderList.add(f.getName());
+            if(f.isDirectory())
+            {
+                storingFolderExternal(f);
+            }
+            if(f.getName().endsWith(".jpg")||f.getName().endsWith(".png")){
+                folderList.add(new File(f.getParent()));
+            }
+        }
+        for (int i=0;i<folderList.size()-1;i++){
+            for (int j=1;j<folderList.size();j++){
+                if (folderList.get(i).equals(folderList.get(j))){
+                    folderList.remove(j);
+                }
+            }
         }
         adapterRecycleView=new FolderRecycleView(folderList,getContext());
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);

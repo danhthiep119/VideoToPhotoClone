@@ -1,27 +1,17 @@
-package com.example.videotophotoclone;
+package com.example.videotophotoclone.View;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Switch;
-import android.widget.TabHost;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatDialogFragment;
-
-import com.google.android.material.tabs.TabItem;
-import com.google.android.material.tabs.TabLayout;
+import com.example.videotophotoclone.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +34,7 @@ public class OptionDialog extends Dialog {
         super(mContext);
         this.mContext = mContext;
         setContentView(R.layout.option_dialog);
+        setTitle(R.string.Option);
         AddControls();
         AddEvents();
     }

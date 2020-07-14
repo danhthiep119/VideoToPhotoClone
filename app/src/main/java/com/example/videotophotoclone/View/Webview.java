@@ -1,4 +1,4 @@
-package com.example.videotophotoclone;
+package com.example.videotophotoclone.View;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.webkit.WebView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.videotophotoclone.R;
 
 public class Webview extends AppCompatActivity {
     String url;

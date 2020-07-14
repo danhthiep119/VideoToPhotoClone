@@ -1,4 +1,4 @@
-package com.example.videotophotoclone;
+package com.example.videotophotoclone.View;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -7,6 +7,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+
+import com.example.videotophotoclone.R;
 
 public class RenameDialog extends Dialog {
     Context mContex;

@@ -1,11 +1,9 @@
-package com.example.videotophotoclone;
+package com.example.videotophotoclone.View;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import android.os.Environment;
@@ -16,10 +14,12 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
-import android.widget.Toast;
+
+import com.example.videotophotoclone.Controler.ListFolderAdapter;
+import com.example.videotophotoclone.R;
 
 import java.io.File;
-import java.io.FilterInputStream;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +59,7 @@ public class SelectedFragment extends Fragment {
         ArrayList<File> myVideo = ListDir(Environment.getExternalStorageDirectory());
         for (int i=0;i<dir.size()-1;i++){
             for (int j=1;j<dir.size();j++){
-                if (dir.get(i).equals(dir.get(j))){
+                if (dir.get(i).getName().equals(dir.get(j).getName())){
                     dir.remove(j);
                 }
             }
@@ -69,15 +69,14 @@ public class SelectedFragment extends Fragment {
     }
 
     public ArrayList<File> ListDir(File f) {
-        dir.clear();
+
         ArrayList<File> temp = new ArrayList<>();
         File[] files = f.listFiles();
-        Log.w(TAG, "has :" + files.length + " files");
         for (File file : files) {
-            if (file.isDirectory() && !file.isHidden()) {
+            if (file.isDirectory()) {
                 temp.addAll(ListDir(file));
             }
-            if (file.getName().endsWith(".jpg")) {
+            if (file.getName().endsWith(".mp4")) {
                 dir.add(new File(file.getParent()));
                 temp.add(file);
             }

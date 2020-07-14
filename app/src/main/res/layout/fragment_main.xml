@@ -4,23 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditPhotoFragment">
+    tools:context=".View.EditPhotoFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colorAccent"
+        >
         <!-- TODO: Update blank fragment layout -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintTop_toTopOf="parent"
+            android:background="@color/colorAccent"
+            app:layout_constraintBottom_toTopOf="@+id/bottomNav"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             >
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:cardCornerRadius="50dp"
                 >
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -31,7 +35,7 @@
                         android:layout_height="100dp"
                         android:id="@+id/btnSlVideo"
                         android:src="@drawable/ic_personal_video_black_75dp"
-                        android:background="#FFFFFF"
+                        android:background="#00FFFFFF"
                         />
 
                     <TextView
@@ -49,6 +53,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:cardCornerRadius="50dp"
                 >
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -59,7 +64,7 @@
                         android:layout_height="100dp"
                         android:id="@+id/btnGallery"
                         android:src="@drawable/ic_picture_in_picture_black_75dp"
-                        android:background="#FFFFFF"
+                        android:background="#00FFFFFF"
                         />
 
                     <TextView
@@ -77,6 +82,7 @@
             <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+                app:cardCornerRadius="50dp"
             >
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -87,7 +93,7 @@
                     android:layout_height="100dp"
                     android:id="@+id/btnSlshow"
                     android:src="@drawable/ic_slideshow_black_24dp"
-                    android:background="#FFFFFF"
+                    android:background="#00FFFFFF"
                     />
 
                 <TextView
@@ -105,6 +111,7 @@
             <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+                app:cardCornerRadius="50dp"
             >
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -115,7 +122,7 @@
                     android:layout_height="100dp"
                     android:id="@+id/btnSetting"
                     android:src="@drawable/ic_settings_black_24dp"
-                    android:background="#FFFFFF"
+                    android:background="#00FFFFFF"
                     />
 
                 <TextView
@@ -140,7 +147,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:menu="@menu/item_botom_navigation"
-            android:background="?android:attr/windowBackground"
+            android:background="@color/colorAccent"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

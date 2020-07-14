@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.videotophotoclone.MainFragment"
+        android:name="com.example.videotophotoclone.View.MainFragment"
         android:label="Video to Photo"
         tools:layout="@layout/fragment_main" >
         <action
@@ -22,17 +22,21 @@
     </fragment>
     <fragment
         android:id="@+id/selectedFragment"
-        android:name="com.example.videotophotoclone.SelectedFragment"
+        android:name="com.example.videotophotoclone.View.SelectedFragment"
         android:label="@string/SelectedVideo"
-        tools:layout="@layout/fragment_selected" />
+        tools:layout="@layout/fragment_selected" >
+        <action
+            android:id="@+id/action_selectedFragment_to_selectedVideoFragment"
+            app:destination="@id/selectedVideoFragment" />
+    </fragment>
     <fragment
         android:id="@+id/slideshowMakerFragment"
-        android:name="com.example.videotophotoclone.SlideshowMakerFragment"
+        android:name="com.example.videotophotoclone.View.SlideshowMakerFragment"
         android:label="@string/SlideshowMaker"
         tools:layout="@layout/fragment_slideshow_maker" />
     <fragment
         android:id="@+id/galleryFragment"
-        android:name="com.example.videotophotoclone.GalleryFragment"
+        android:name="com.example.videotophotoclone.View.GalleryFragment"
         android:label="@string/Gallery"
         tools:layout="@layout/fragment_gallery" >
         <argument
@@ -40,9 +44,6 @@
             app:argType="string"
             android:defaultValue="null"
             />
-        <action
-            android:id="@+id/action_galleryFragment_to_editPhotoFragment2"
-            app:destination="@id/editPhotoFragment2" />
         <action
             android:id="@+id/action_galleryFragment_to_showVideo"
             app:destination="@id/showVideo">
@@ -52,15 +53,57 @@
                 android:defaultValue="null"
                 />
         </action>
+        <action
+            android:id="@+id/action_galleryFragment_to_imageListFragment"
+            app:destination="@id/imageListFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/editPhotoFragment2"
-        android:name="com.example.videotophotoclone.EditPhotoFragment"
-        android:label="EditPhotoFragment" />
+        android:name="com.example.videotophotoclone.View.EditPhotoFragment"
+        android:label="EditPhotoFragment" >
+        <action
+            android:id="@+id/action_editPhotoFragment2_to_imageListFragment"
+            app:destination="@id/imageListFragment" />
+    </fragment>
     <fragment
         android:id="@+id/showVideo"
-        android:name="com.example.videotophotoclone.ShowVideo"
+        android:name="com.example.videotophotoclone.View.ShowVideo"
         android:label="@string/ShowVideo"
         tools:layout="@layout/fragment_show_video" />
+    <fragment
+        android:id="@+id/videoEditFragment"
+        android:name="com.example.videotophotoclone.View.VideoEditFragment"
+        android:label="fragment_video_edit"
+        tools:layout="@layout/fragment_video_edit" >
+        <action
+            android:id="@+id/action_videoEditFragment_to_imageListFragment"
+            app:destination="@id/imageListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/selectedVideoFragment"
+        android:name="com.example.videotophotoclone.View.SelectedVideoFragment"
+        android:label="fragment_selected_video"
+        tools:layout="@layout/fragment_selected_video" >
+        <action
+            android:id="@+id/action_selectedVideoFragment_to_videoEditFragment"
+            app:destination="@id/videoEditFragment" />
+        <action
+            android:id="@+id/action_selectedVideoFragment_to_timeCaptureVideo"
+            app:destination="@id/timeCaptureVideo" />
+    </fragment>
+    <fragment
+        android:id="@+id/imageListFragment"
+        android:name="com.example.videotophotoclone.View.ImageListFragment"
+        android:label="fragment_image_list"
+        tools:layout="@layout/fragment_image_list" >
+        <action
+            android:id="@+id/action_imageListFragment_to_editPhotoFragment2"
+            app:destination="@id/editPhotoFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/timeCaptureVideo"
+        android:name="com.example.videotophotoclone.View.TimeCaptureVideo"
+        android:label="fragment_time_capture_video"
+        tools:layout="@layout/fragment_time_capture_video" />
 </navigation>

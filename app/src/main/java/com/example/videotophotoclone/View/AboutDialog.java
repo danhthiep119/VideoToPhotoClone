@@ -1,4 +1,4 @@
-package com.example.videotophotoclone;
+package com.example.videotophotoclone.View;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -7,7 +7,8 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
+
+import com.example.videotophotoclone.R;
 
 public class AboutDialog extends Dialog {
     Context mContext;

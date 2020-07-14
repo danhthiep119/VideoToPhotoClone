@@ -4,5 +4,6 @@
     <item
         android:id="@+id/Create"
         android:title="CREATE"
+        app:showAsAction="always"
         />
 </menu>

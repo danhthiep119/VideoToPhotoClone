@@ -28,4 +28,13 @@
     <string name="Sticker">Sticker</string>
     <string name="paint">Paint</string>
     <string name="ShowVideo">Show Video</string>
+    <string name="FileFormat">File Format</string>
+    <string name="Quality">Quality</string>
+    <string name="Size">Size</string>
+    <string name="Best">Best</string>
+    <string name="VeryHigh">Very High</string>
+    <string name="High">High</string>
+    <string name="Medium">Medium</string>
+    <string name="Low">Low</string>
+    <string name="Edit">Edit</string>
 </resources>

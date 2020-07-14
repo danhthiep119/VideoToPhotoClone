@@ -1,25 +1,50 @@
-package com.example.videotophotoclone;
+package com.example.videotophotoclone.View;
 
+import android.graphics.Bitmap;
 import android.media.MediaMetadata;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
+import android.os.SystemClock;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import com.example.videotophotoclone.Model.TypeSetting;
+import com.example.videotophotoclone.R;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import wseemann.media.FFmpegMediaMetadataRetriever;
 
@@ -29,10 +54,17 @@ import wseemann.media.FFmpegMediaMetadataRetriever;
  */
 public class VideoEditFragment extends Fragment {
     SeekBar seekBar;
-    TextView txtNameVideo,txtCurrentTime,txtEndTime;
+    TextView txtNameVideo, txtCurrentTime, txtEndTime;
     VideoView vdView;
-    ImageButton imgControlsVideo;
-    boolean isplayed=false;
+    ImageButton imgControlsVideo, btnSnap;
+    Button btnDone;
+    ImageView imgSnap;
+    List<Bitmap> captureImageList = new ArrayList<>();
+    final String TAG = "Video Edit Fragment:";
+    TypeSetting setting;
+    static String endWiths = ".jpg";
+    FFmpegMediaMetadataRetriever mmr = new FFmpegMediaMetadataRetriever();
+
     public VideoEditFragment() {
         // Required empty public constructor
     }
@@ -54,38 +86,126 @@ public class VideoEditFragment extends Fragment {
         txtEndTime = view.findViewById(R.id.txtEndTime);
         vdView = view.findViewById(R.id.vdView);
         imgControlsVideo = view.findViewById(R.id.imgControlsVideo);
+        btnDone = view.findViewById(R.id.btnDone);
+        btnSnap = view.findViewById(R.id.btnSnap);
+        imgSnap = view.findViewById(R.id.imgSnap);
+        imgControlsVideo.setImageResource(R.drawable.ic_play_arrow_white_24dp);
+        final String videoPath = getArguments().getString("VIDEOPATH");
         try {
-            getData();
+            getData(videoPath);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        btnSnap.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.P)
+            @Override
+            public void onClick(View v) {
+                Bitmap bmFrame = mmr.getFrameAtTime(vdView.getCurrentPosition()*1000,FFmpegMediaMetadataRetriever.OPTION_CLOSEST);
+                captureImageList.add(bmFrame);
+                createFileImage(bmFrame,videoPath);
+                imgSnap.setImageBitmap(bmFrame);
+            }
+        });
+        try {
+            if (!captureImageList.isEmpty()) {
+                imgSnap.setImageBitmap(captureImageList.get(captureImageList.size() - 1));
+            }
+        }
+        catch (Exception e){
+            Log.w(TAG,""+e);
+        }
+        btnDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                vdView.pause();
+                NavController nav = Navigation.findNavController(v);
+                nav.navigate(R.id.action_videoEditFragment_to_imageListFragment);
+            }
+        });
     }
 
-    private void getData() throws IOException {
-        String videoPath = getArguments().getString("VIDEOPATH");
-        Uri uri=Uri.parse(videoPath);
+    @Override
+    public void onStop() {
+        super.onStop();
+        vdView.pause();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void createFileImage(Bitmap bimap,String videoPath) {
+        File filePath = new File(videoPath);
+        filePath = new File(filePath.getName());
+        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/ScreenShots");
+        if(!file.exists()){
+            file.mkdirs();
+        }
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm");
+//        LocalDateTime now = LocalDateTime.now();
+
+        Bitmap.CompressFormat bitmap = Bitmap.CompressFormat.JPEG;
+        if(setting.type.equals("JPG")){
+            endWiths = ".jpg";
+            bitmap = Bitmap.CompressFormat.JPEG;
+        }
+        if(setting.type.equals("PNG")){
+            endWiths = ".png";
+            bitmap = Bitmap.CompressFormat.PNG;
+        }
+//        String fileName = String.format(formatter.format(now)+endWiths);
+        String fileName = System.currentTimeMillis()+endWiths;
+        File outFile = new File(file,fileName);
+        try {
+            FileOutputStream fos = new FileOutputStream(outFile);
+            bimap.compress(bitmap,100,fos);
+            fos.flush();
+            fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void getData(String videoPath) throws IOException {
+        File videoFile = new File(videoPath);
+        videoFile = new File(videoFile.getPath());
+        Uri uri = Uri.parse(videoPath);
+        mmr.setDataSource(videoPath);
         vdView.setVideoURI(uri);
-//        MediaPlayer mp =new MediaPlayer();
-//        try {
-//            mp.reset();
-//            mp.setDataSource(videoPath);
-//            mp.prepare();
-//        }
-//        catch (IOException e){
-//
-//        }
-//        txtCurrentTime.setText(MilisecondsToTimer(mp.getCurrentPosition()/1000));
-//        txtEndTime.setText(MilisecondsToTimer(mp.getDuration()/1000));
+        vdView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                seekBar.setMax(vdView.getDuration());
+                String duration = MilisecondsToTimer(vdView.getDuration() / 1000);
+                txtEndTime.setText(duration);
+            }
+        });
+        vdView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mp.release();
+            }
+        });
+        txtNameVideo.setText(videoFile.getName());
         imgControlsVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                playVideo(isplayed);
+                if (!vdView.isPlaying()) {
+                    vdView.start();
+                    imgControlsVideo.setImageResource(R.drawable.ic_pause_white_24dp);
+                } else {
+                    vdView.pause();
+                    imgControlsVideo.setImageResource(R.drawable.ic_play_arrow_white_24dp);
+                }
             }
         });
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+                if (fromUser) {
+                    vdView.seekTo(progress);
+                    seekBar.setProgress(progress);
+                }
             }
 
             @Override
@@ -98,37 +218,57 @@ public class VideoEditFragment extends Fragment {
 
             }
         });
-
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (vdView != null) {
+                    try {
+                        if (vdView.isPlaying()) {
+                            Message msg = new Message();
+                            msg.what = vdView.getCurrentPosition();
+                            handler.sendMessage(msg);
+                            Thread.sleep(1);
+                        }
+                        else {
+                            Message msg = new Message();
+                            msg.what = vdView.getCurrentPosition();
+                            handler.sendMessage(msg);
+                            Thread.sleep(1);
+                        }
+                    } catch (InterruptedException ie) {
+                        Log.w(TAG, "" + ie);
+                    }
+                }
+            }
+        }).start();
     }
 
-    private void playVideo(boolean isPlayed) {
-        if(isPlayed){
-            vdView.start();
-            isplayed = false;
-            imgControlsVideo.setEnabled(true);
-        }
-        else  {
-            vdView.pause();
-            isPlayed=true;
-            imgControlsVideo.setEnabled(false);
-        }
-    }
 
-    String MilisecondsToTimer(long milisec){
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            txtCurrentTime.setText(MilisecondsToTimer(msg.what / 1000));
+            seekBar.setProgress(msg.what);
+        }
+    };
+
+    String MilisecondsToTimer(long milisec) {
         String finalTimerString = "";
         String secondString;
-        int seconds = (int) milisec %(60*60)%60/60;
-        int minutes = (int) milisec%(60*60)/60;
-        int hours = (int) milisec /(60*60);
-        if(hours>0){
-            finalTimerString = hours+":";
+        String minuteString;
+        int seconds = (int) milisec % 60;
+        int minutes = (int) milisec / 60;
+        int hours = (int) milisec / (60 * 60);
+        if (hours > 0) {
+            finalTimerString = hours + ":";
         }
-        if(milisec<10)
-        {
-            secondString = "0"+seconds;
-        }
-        else  secondString = ""+seconds;
-        finalTimerString = finalTimerString + minutes+":"+secondString;
+        if (seconds < 10) {
+            secondString = "0" + seconds;
+        } else secondString = "" + seconds;
+        if (minutes < 10) {
+            minuteString = "0" + minutes;
+        } else minuteString = "" + minutes;
+        finalTimerString = finalTimerString + minuteString + ":" + secondString;
         return finalTimerString;
     }
 }

@@ -1,20 +1,12 @@
-package com.example.videotophotoclone;
+package com.example.videotophotoclone.Controler;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ActionProvider;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -24,6 +16,8 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.videotophotoclone.Model.Video;
+import com.example.videotophotoclone.R;
+import com.example.videotophotoclone.View.OptionDialog;
 
 import java.util.List;
 
@@ -59,14 +53,14 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.DataBinding>
             @Override
             public void onClick(View v) {
                 String videoPath = videoList.get(position).getVideoPath();
-//                OptionDialog dialog = new OptionDialog(mContext);
-//                dialog.show();
+                OptionDialog dialog = new OptionDialog(mContext);
+                dialog.show();
                 try {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("VIDEOPATH", videoPath);
-                    NavController nav = Navigation.findNavController(v);
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString("VIDEOPATH", videoPath);
+//                    NavController nav = Navigation.findNavController(v);
 //                        nav.navigate(R.id.action_galleryFragment_to_showVideo, bundle);
-                    nav.navigate(R.id.action_galleryFragment_to_videoEditFragment,bundle);
+//                    nav.navigate(R.id.action_galleryFragment_to_videoEditFragment,bundle);
                 } catch (Exception e) {
                     Log.w(TAG, "" + e);
                 }

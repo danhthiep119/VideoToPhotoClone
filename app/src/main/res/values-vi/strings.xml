@@ -29,4 +29,13 @@
     <string name="Sticker">Sticker</string>
     <string name="paint">Vẽ</string>
     <string name="ShowVideo">Phát video</string>
+    <string name="FileFormat">Định dạng</string>
+    <string name="Quality">Chất Lượng</string>
+    <string name="Size">Kích thước</string>
+    <string name="Best">Tốt nhất</string>
+    <string name="VeryHigh">Rất cao</string>
+    <string name="High">Cao</string>
+    <string name="Medium">Thường</string>
+    <string name="Low">Thấp</string>
+    <string name="Edit">Chỉnh sửa</string>
 </resources>

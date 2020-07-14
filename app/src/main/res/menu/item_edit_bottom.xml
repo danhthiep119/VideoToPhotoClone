@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
+    <item
+        android:title="@string/Cut"
+        android:icon="@drawable/ic_content_cut_black_35dp"
+        android:id="@+id/nav_cut"
+        />
+    <item
+        android:title="@string/Text"
+        android:icon="@drawable/ic_text_fields_black_35dp"
+        android:id="@+id/nav_text"
+        />
+    <item
+        android:title="@string/Sticker"
+        android:icon="@drawable/ic_star_half_black_35dp"
+        android:id="@+id/nav_sticker"
+        />
+    <item
+        android:title="@string/paint"
+        android:icon="@drawable/ic_brush_black_24dp"
+        android:id="@+id/nav_paint"
+        />
 </menu>

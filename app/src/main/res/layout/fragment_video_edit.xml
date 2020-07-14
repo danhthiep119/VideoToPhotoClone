@@ -1,14 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".VideoEditFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    tools:context=".View.VideoEditFragment">
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="parent"
+            >
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/topAppbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:menu="@menu/item_slideshows"
+                />
+        </com.google.android.material.appbar.AppBarLayout>
+        <VideoView
+            android:layout_width="0dp"
+            android:layout_height="250dp"
+            android:id="@+id/vdView"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imgControlsVideo"
+            app:layout_constraintBottom_toTopOf="@+id/txtNameVideo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/vdView"
+            app:layout_constraintTop_toTopOf="@+id/vdView" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/vdView"
+            android:text="Video Name"
+            android:gravity="center"
+            android:id="@+id/txtNameVideo"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"
+            android:id="@+id/txtCurrentTime"
+            app:layout_constraintTop_toBottomOf="@+id/txtNameVideo"
+            app:layout_constraintLeft_toLeftOf="parent"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtEndTime"
+            app:layout_constraintTop_toBottomOf="@+id/txtNameVideo"
+            app:layout_constraintRight_toRightOf="parent"
+            android:text="00:00"
+            />
+        <SeekBar
+            android:layout_width="0dp"
+            android:layout_height="25dp"
+            android:id="@+id/seek_bar_video"
+            app:layout_constraintTop_toBottomOf="@+id/txtNameVideo"
+            app:layout_constraintLeft_toRightOf="@id/txtCurrentTime"
+            app:layout_constraintRight_toLeftOf="@+id/txtEndTime"
+            />
+        <ImageButton
+            android:layout_width="75dp"
+            android:layout_height="50dp"
+            android:id="@+id/btnSnap"
+            android:src="@drawable/ic_photo_camera_black_24dp"
+            app:layout_constraintBottom_toTopOf="@+id/imgSnap"
+            app:layout_constraintLeft_toLeftOf="parent"
+            />
+        <Button
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DONE"
+            android:textSize="20dp"
+            android:id="@+id/btnDone"
+            app:layout_constraintBottom_toTopOf="@+id/btnSnap"
+            app:layout_constraintLeft_toLeftOf="parent"
+            />
+
+        <ImageView
+            android:id="@+id/imgSnap"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            app:layout_constraintBottom_toTopOf="@+id/tbTabHost"
+            app:layout_constraintLeft_toLeftOf="parent"
+            />
+
+        <com.google.android.material.tabs.TabLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tbTabHost"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            >
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Quick Capture"
+                />
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Time Capture"
+                />
+        </com.google.android.material.tabs.TabLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

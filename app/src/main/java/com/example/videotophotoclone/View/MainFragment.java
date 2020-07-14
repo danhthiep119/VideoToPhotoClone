@@ -1,4 +1,4 @@
-package com.example.videotophotoclone;
+package com.example.videotophotoclone.View;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import com.example.videotophotoclone.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.File;
@@ -65,6 +66,13 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 nav.navigate(R.id.action_mainFragment_to_slideshowMakerFragment);
+            }
+        });
+        btnSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SettingDialog dialog=new SettingDialog(getContext());
+                dialog.show();
             }
         });
         BottomNavigationView bottomNav= view.findViewById(R.id.bottomNav);

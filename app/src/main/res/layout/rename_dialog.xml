@@ -25,6 +25,7 @@
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="100dp"
         android:layout_height="50dp"
+        android:id="@+id/btnDone"
         android:text="@string/Ok"
         android:textSize="18dp"
         app:layout_constraintLeft_toRightOf="@+id/btnCancel"

@@ -1,8 +1,6 @@
-package com.example.videotophotoclone;
+package com.example.videotophotoclone.View;
 
-import android.app.Dialog;
 import android.media.MediaMetadataRetriever;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,13 +16,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.videotophotoclone.Model.Video;
+import com.example.videotophotoclone.R;
+import com.example.videotophotoclone.Controler.VideoAdapter;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import wseemann.media.FFmpegMediaMetadataRetriever;
 
 
 /**
@@ -61,12 +59,8 @@ public class GalleryFragment extends Fragment {
         tbVideos=view.findViewById(R.id.tbVideos);
         tbImages=view.findViewById(R.id.tbImages);
         videoList.clear();
+        readVideoFromFile();
         String videoPath = "android.resource://com.example.videotophotoclone/"+R.raw.video;
-//        media.setDataSource(getContext(), Uri.parse(videoPath));
-//        Long duration = Long.parseLong(media.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
-//        String date = media.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DATE);
-//        String name = media.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-//        media.release();
         videoList.add(new Video("name","duration","date",videoPath));
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
         rvShow.setLayoutManager(linearLayoutManager);
@@ -74,4 +68,7 @@ public class GalleryFragment extends Fragment {
         rvShow.setAdapter(new VideoAdapter(videoList,getContext()));
 
      }
+
+    private void readVideoFromFile() {
+    }
 }
