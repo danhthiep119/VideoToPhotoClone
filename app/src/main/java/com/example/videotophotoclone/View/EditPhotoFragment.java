@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -17,11 +18,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
@@ -42,10 +45,11 @@ public class EditPhotoFragment extends Fragment {
     ConstraintLayout customLayout;
     PhotoEditor mPhotoEditor;
     Typeface mTextFont;
-    LinearLayout textZone;
+    LinearLayout textZone,brushZone;
     EditText txtInsertText;
-    Button btnOk;
+    Button btnOk,btnColor,btnErase;
     ImageButton btnInfo;
+    SeekBar sizeBrush;
     public EditPhotoFragment() {
     }
 
@@ -62,13 +66,18 @@ public class EditPhotoFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 //        ImageView imgShow = view.findViewById(R.id.imgShow);
         PhotoEditorView mPhotoEditorView = view.findViewById(R.id.photo_editor);
-
+        sizeBrush = view.findViewById(R.id.seek_bar_size_brush);
         txtInsertText = view.findViewById(R.id.txtInsertText);
         btnOk = view.findViewById(R.id.btnOk);
         btnInfo = view.findViewById(R.id.info_image);
+        btnErase = view.findViewById(R.id.btnErase);
 
         textZone = view.findViewById(R.id.textZone);
         textZone.setVisibility(View.INVISIBLE);
+
+        brushZone = view.findViewById(R.id.brush_zone);
+        brushZone.setVisibility(View.INVISIBLE);
+
         customLayout = view.findViewById(R.id.CustomLayout);
         path = getArguments().getString("IMAGEPATH");
         File file = new File(path);
@@ -76,6 +85,7 @@ public class EditPhotoFragment extends Fragment {
 //        imgShow.setImageBitmap(bitmap);
         mPhotoEditorView.getSource().setImageBitmap(bitmap);
         Typeface mTextFont = ResourcesCompat.getFont(getContext(),R.font.greatvibes_regular);
+//        Typeface emoji = Typeface.createFromAsset(getContext().getAssets(),"");
         mPhotoEditor =new PhotoEditor.Builder(getContext(),mPhotoEditorView)
                 .setPinchTextScalable(true)
                 .setDefaultTextTypeface(mTextFont)
@@ -100,6 +110,7 @@ public class EditPhotoFragment extends Fragment {
         });
     }
     private BottomNavigationView.OnNavigationItemSelectedListener listener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()){
@@ -111,7 +122,7 @@ public class EditPhotoFragment extends Fragment {
                     break;
                 case  R.id.nav_delete:
                     AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
-                    dialog.setTitle(R.string.Rename).setMessage("Bạn Có muốn xóa ko?").setNegativeButton(R.string.Cancel, new DialogInterface.OnClickListener() {
+                    dialog.setTitle(R.string.Delete).setMessage("Bạn Có muốn xóa ko?").setNegativeButton(R.string.Cancel, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
@@ -129,7 +140,9 @@ public class EditPhotoFragment extends Fragment {
 
                     break;
                 case R.id.nav_text:
+                    mPhotoEditor.setBrushDrawingMode(false);
                     textZone.setVisibility(View.VISIBLE);
+                    brushZone.setVisibility(View.INVISIBLE);
                     btnOk.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -137,24 +150,64 @@ public class EditPhotoFragment extends Fragment {
                             txtInsertText.setText("");
                         }
                     });
-
                     break;
                 case R.id.nav_paint:
                     textZone.setVisibility(View.INVISIBLE);
-                    mPhotoEditor.setBrushDrawingMode(true);
-                    mPhotoEditor.setBrushSize(18.0f);
-                    mPhotoEditor.setBrushColor(Color.parseColor("#FFFFFF"));
+                    brushZone.setVisibility(View.VISIBLE);
+                    drawInImage();
                     break;
                 case R.id.nav_cut:
+                    mPhotoEditor.setBrushDrawingMode(false);
                     textZone.setVisibility(View.INVISIBLE);
+                    brushZone.setVisibility(View.INVISIBLE);
                     break;
                 case R.id.nav_sticker:
+                    mPhotoEditor.setBrushDrawingMode(false);
                     textZone.setVisibility(View.INVISIBLE);
+                    brushZone.setVisibility(View.INVISIBLE);
+                    insertEmojiorImage();
                     break;
             }
             return true;
         }
     };
 
+    private void insertEmojiorImage() {
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.ic_folder_black_24dp);
+        mPhotoEditor.addImage(bitmap);
+    }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void drawInImage() {
+
+        mPhotoEditor.setBrushDrawingMode(true);
+        sizeBrush.setMax((int) 24.0f);
+        sizeBrush.setMin((int) 1.0f);
+        sizeBrush.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(fromUser){
+                    mPhotoEditor.setBrushSize(progress);
+                    mPhotoEditor.setBrushEraserSize(progress);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        btnErase.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPhotoEditor.brushEraser();
+            }
+        });
+        mPhotoEditor.setBrushColor(Color.parseColor("#FFFFFF"));
+    }
 }

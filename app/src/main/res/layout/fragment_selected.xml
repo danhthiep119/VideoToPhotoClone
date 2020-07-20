@@ -3,11 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorForest"
     tools:context=".View.SelectedFragment">
         <GridView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:numColumns="2"
+            android:numColumns="3"
             android:id="@+id/gvFolder"
             />
 

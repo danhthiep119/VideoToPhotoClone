@@ -28,6 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/txtVideoName"
+            android:inputType="text"
             android:text="Video name"
             android:textSize="20dp"
             android:layout_gravity="left"
@@ -36,6 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/txtCapacity"
+            android:inputType="text"
             android:text="Capacity"
             android:textSize="16dp"
             />
@@ -43,6 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/txtTime"
+            android:inputType="text"
             android:text="Time, Date"
             android:layout_gravity="right"
             android:gravity="right"

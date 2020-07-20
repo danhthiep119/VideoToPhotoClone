@@ -31,8 +31,10 @@ public class TimeCaptureVideo extends Fragment {
     VideoView vdViewTimeCapture;
     TextView txtName,txtCurrentTime,txtEndTime;
     ImageButton imgController;
-    public TimeCaptureVideo() {
+    String path;
+    public TimeCaptureVideo(String path) {
         // Required empty public constructor
+        this.path = path;
     }
 
 
@@ -57,7 +59,7 @@ public class TimeCaptureVideo extends Fragment {
         txtEndTime = view.findViewById(R.id.txtEndTime);
         imgController = view.findViewById(R.id.imgControlsVideo);
         vdViewTimeCapture = view.findViewById(R.id.vdViewTimeCapture);
-        String path = getArguments().getString("VIDEOPATH");
+//        String path = getArguments().getString("VIDEOPATH");
         File file = new File(path);
         txtName.setText(file.getName());
         Uri uri = Uri.parse(path);
@@ -100,11 +102,11 @@ public class TimeCaptureVideo extends Fragment {
                         Message msg = new Message();
                         msg.what = vdViewTimeCapture.getCurrentPosition();
                         handler.sendMessage(msg);
-                        try {
-                            Thread.sleep(1);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                    }
+                    try {
+                        Thread.sleep(1);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
                 }
             }

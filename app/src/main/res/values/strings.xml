@@ -37,4 +37,12 @@
     <string name="Medium">Medium</string>
     <string name="Low">Low</string>
     <string name="Edit">Edit</string>
+    <string name="QuickCapture">Quick Capture</string>
+    <string name="TimeCapture">Time Capture</string>
+    <string name="Create">Create</string>
+    <string name="EnterDuration">Enter duration</string>
+    <string name="SecImage">Sec/Image</string>
+    <string name="AddImage">Add Image</string>
+    <string name="SlideSec">Slide/Sec </string>
+    <string name="Music">Music</string>
 </resources>

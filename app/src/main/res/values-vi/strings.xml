@@ -38,4 +38,12 @@
     <string name="Medium">Thường</string>
     <string name="Low">Thấp</string>
     <string name="Edit">Chỉnh sửa</string>
+    <string name="QuickCapture">Chụp ngay</string>
+    <string name="TimeCapture">Chụp thời gian</string>
+    <string name="Create">Tạo</string>
+    <string name="EnterDuration">Nhập thời gian</string>
+    <string name="SecImage">Giây/Ảnh</string>
+    <string name="AddImage">Thêm ảnh</string>
+    <string name="SlideSec">Slide/giây </string>
+    <string name="Music">Nhạc</string>
 </resources>

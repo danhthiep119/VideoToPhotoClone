@@ -57,7 +57,7 @@ public class ListVideoAdapter extends BaseAdapter {
                 Bundle bunn = new Bundle();
                 bunn.putString("VIDEOPATH",path);
                 NavController nav= Navigation.findNavController(v);
-                nav.navigate(R.id.action_selectedVideoFragment_to_videoEditFragment,bunn);
+                nav.navigate(R.id.action_selectedVideoFragment_to_tabVideoFragment,bunn);
             }
         });
         Uri uri = Uri.parse(videoList.get(position).getAbsolutePath());

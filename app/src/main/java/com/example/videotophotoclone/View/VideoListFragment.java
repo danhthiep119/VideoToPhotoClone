@@ -1,4 +1,4 @@
-package com.example.videotophotoclone;
+package com.example.videotophotoclone.View;
 
 import android.os.Bundle;
 
@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.example.videotophotoclone.Controler.VideoAdapter;
+import com.example.videotophotoclone.R;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class VideoListFragment extends Fragment {
     List<File> videoList=new ArrayList<>();
     String path;
     RecyclerView lvVideoList;
-    VideoAdapter adapter;
+    public VideoAdapter adapter;
     public VideoListFragment(String path) {
         // Required empty public constructor
         this.path = path;
@@ -45,6 +46,7 @@ public class VideoListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         lvVideoList=view.findViewById(R.id.lvVideoList);
+        videoList.clear();
         File file = new File(path);
         File[] files = file.listFiles();
         for (File f:files){

@@ -11,23 +11,40 @@ import androidx.navigation.ui.NavigationUI;
 import android.Manifest;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.view.WindowManager;
 
 import com.example.videotophotoclone.R;
 
+import java.io.File;
+
 public class MainActivity extends AppCompatActivity {
     NavController navController;
-    Toolbar toolbar;
-    final int REQUEST_CODE =101;
+    public Toolbar toolbar;
+    final int REQUEST_CODE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         requestPermissions();
+        createFolder();
         toolbar = findViewById(R.id.my_toolbar);
         //Điều hướng navigation
         navController= Navigation.findNavController(this,R.id.fragment);
         AppBarConfiguration configuration=new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupWithNavController(toolbar,navController,configuration);
+    }
+
+    private void createFolder() {
+        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Videos");
+        File file2 = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/ScreenShots");
+        if(!file.exists()){
+            file.mkdirs();
+        }
+        if(!file2.exists()){
+            file2.mkdirs();
+        }
     }
 
     private void requestPermissions() {
@@ -47,6 +64,5 @@ public class MainActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         navController.navigateUp();
         return super.onSupportNavigateUp();
-
     }
 }

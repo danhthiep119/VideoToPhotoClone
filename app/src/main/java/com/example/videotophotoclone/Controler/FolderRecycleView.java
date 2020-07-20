@@ -1,6 +1,7 @@
 package com.example.videotophotoclone.Controler;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.videotophotoclone.R;
+import com.example.videotophotoclone.View.SlideshowMakerFragment;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,10 +21,12 @@ import java.util.List;
 public class FolderRecycleView extends RecyclerView.Adapter<FolderRecycleView.DataViewHolder> {
     List<File> folderList;
     Context mContext;
-
-    public FolderRecycleView(List<File> folderList, Context mContext) {
+    SlideshowMakerFragment fmSideShow;
+    boolean isChecked = false;
+    public FolderRecycleView(List<File> folderList, Context mContext, SlideshowMakerFragment _fmSideShow) {
         this.folderList = folderList;
         this.mContext = mContext;
+        this.fmSideShow = _fmSideShow;
     }
 
     @NonNull
@@ -38,12 +42,22 @@ public class FolderRecycleView extends RecyclerView.Adapter<FolderRecycleView.Da
         File file = new File(path);
         file = new File(file.getPath());
         int count = countFiles(file);
+        if(!isChecked){
+            holder.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+            holder.txtName.setTextColor(Color.parseColor("#000000"));
+        }
         holder.txtName.setText(folderList.get(position).getName()+" ("+count+" images)");
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                v.setBackgroundColor(000000);
-                Toast.makeText(mContext,"Bạn Mở Thư mục: "+ folderList.get(position).getName(),Toast.LENGTH_SHORT).show();
+                isChecked = true;
+                if(isChecked){
+                    v.setBackgroundColor(Color.parseColor("#0008FF"));
+                    holder.txtName.setTextColor(Color.parseColor("#FFFFFF"));
+                    Toast.makeText(mContext,"Bạn Mở Thư mục: "+ folderList.get(position).getName(),Toast.LENGTH_SHORT).show();
+                    String path = folderList.get(position).getAbsolutePath();
+                    fmSideShow.getListImage(path);
+                }
             }
         });
     }

@@ -6,21 +6,20 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
+import android.os.Environment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.videotophotoclone.Model.Video;
+import com.example.videotophotoclone.Controler.GalleryViewPager;
 import com.example.videotophotoclone.R;
 import com.example.videotophotoclone.Controler.VideoAdapter;
-import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,19 +28,14 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class GalleryFragment extends Fragment {
-    List<Video> videoList = new ArrayList<>();
+    public static List<File> videoList = new ArrayList<>();
     RecyclerView rvShow;
-    TabItem tbVideos,tbImages;
+    ViewPager viewGallery;
     TabLayout tabHost;
     MediaMetadataRetriever media = new MediaMetadataRetriever();
+    public VideoAdapter adapter;
     public GalleryFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.item_botom_navigation,menu);
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -54,21 +48,29 @@ public class GalleryFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        rvShow=view.findViewById(R.id.rvShow);
         tabHost=view.findViewById(R.id.tabHost);
-        tbVideos=view.findViewById(R.id.tbVideos);
-        tbImages=view.findViewById(R.id.tbImages);
+        viewGallery=view.findViewById(R.id.viewGallery);
         videoList.clear();
-        readVideoFromFile();
-        String videoPath = "android.resource://com.example.videotophotoclone/"+R.raw.video;
-        videoList.add(new Video("name","duration","date",videoPath));
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
-        rvShow.setLayoutManager(linearLayoutManager);
-        rvShow.setHasFixedSize(true);
-        rvShow.setAdapter(new VideoAdapter(videoList,getContext()));
+        GalleryViewPager adapter = new GalleryViewPager(getChildFragmentManager(),getContext());
 
+        adapter.AddFragment(new VideoListFragment(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Videos"));
+        adapter.AddFragment(new ImageFragment(Environment.getExternalStorageDirectory().getAbsolutePath()+"/ScreenShots"));
+        viewGallery.setAdapter(adapter);
+        tabHost.setupWithViewPager(viewGallery);
      }
 
-    private void readVideoFromFile() {
+    public void readVideoFromFile(File file) {
+        if(!file.exists()){
+            file.mkdirs();
+        }
+        File[] files = file.listFiles();
+        for(File f:files){
+            if(f.isDirectory()){
+                readVideoFromFile(f.getAbsoluteFile());
+            }
+            if(f.getName().endsWith(".mp4")||f.getName().endsWith(".mkv")){
+                videoList.add(f);
+            }
+        }
     }
 }

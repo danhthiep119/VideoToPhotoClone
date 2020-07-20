@@ -20,23 +20,11 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             >
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="@string/Videos"
-                android:id="@+id/tbVideos"
-                />
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="@string/Images"
-                android:id="@+id/tbImages"
-                />
         </com.google.android.material.tabs.TabLayout>
-        <androidx.recyclerview.widget.RecyclerView
+        <androidx.viewpager.widget.ViewPager
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/rvShow"
+            android:id="@+id/viewGallery"
             app:layout_constraintTop_toBottomOf="@+id/tabHost"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>

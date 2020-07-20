@@ -13,11 +13,17 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/GvFolder"
             android:layout_width="0dp"
-            android:layout_height="150dp"
+            android:layout_height="125dp"
             android:orientation="horizontal"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/black"
+            app:layout_constraintTop_toBottomOf="@+id/GvFolder"
             />
         <GridView
             android:layout_width="match_parent"
@@ -28,6 +34,12 @@
             app:layout_constraintTop_toBottomOf="@+id/GvFolder"
             app:layout_constraintBottom_toTopOf="@+id/GvSelected"
             android:stretchMode="columnWidth"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/black"
+            app:layout_constraintTop_toBottomOf="@+id/GvImage"
             />
         <GridView
             android:id="@+id/GvSelected"
@@ -46,6 +58,16 @@
             android:text="@string/ClearAll"
             android:textColor="#FFFFFF"
             android:background="#ED4545"
+            />
+        <Button
+            android:id="@+id/btnCreate"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:textSize="20dp"
+            style=""
+            android:text="@string/Create"
+            app:layout_constraintTop_toTopOf="@+id/btnClear"
+            app:layout_constraintLeft_toLeftOf="parent"
             />
 
 

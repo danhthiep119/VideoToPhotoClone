@@ -5,15 +5,22 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Environment;
+import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.PointerIcon;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
@@ -35,12 +42,15 @@ public class SlideshowMakerFragment extends Fragment {
     List<File> folderList=new ArrayList<>();
     List<File> imageList = new ArrayList<>();
     List<File> imageSelected = new ArrayList<>();
-    Button btnClear;
+    Button btnClear,btnCreate;
     GridView GvImage,GvSelected;
     RecyclerView GvFolder;
     FolderRecycleView adapterRecycleView;
     ImageAdapter adapter;
+    final String TAG="Slide Show Maker";
+
     public SlideshowMakerFragment() {
+
     }
 
     @Override
@@ -49,12 +59,6 @@ public class SlideshowMakerFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_slideshow_maker, container, false);
     }
 
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.item_slideshows,menu);
-        super.onCreateOptionsMenu(menu, inflater);
-
-    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -63,35 +67,80 @@ public class SlideshowMakerFragment extends Fragment {
         GvImage=view.findViewById(R.id.GvImage);
         GvSelected=view.findViewById(R.id.GvSelected);
         btnClear=view.findViewById(R.id.btnClear);
+        btnCreate=view.findViewById(R.id.btnCreate);
         File file= Environment.getExternalStorageDirectory();
         folderList.clear();
-        imageList.clear();
         storingFolderExternal(file);
-        getListImage();
         imageSelected.clear();
-        GvImage.setAdapter(new ImageAdapter(imageList,getContext()));
-        GvImage.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(),"Bạn chọn "+imageList.get(position),Toast.LENGTH_SHORT).show();
-                adapter.notifyDataSetChanged();
-            }
-        });
-        adapter = new ImageAdapter(imageSelected,getContext());
-        GvSelected.setAdapter(adapter);
         btnClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imageSelected.clear();
-                adapter.notifyDataSetChanged();
+                if(!imageSelected.isEmpty()) {
+                    imageSelected.clear();
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
+        GvImage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getContext(),"Bạn Chọn 1"+imageList.get(position).getAbsolutePath(),Toast.LENGTH_SHORT).show();
+                imageSelected.add(imageList.get(position));
+                selectedImage(imageSelected);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        btnCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createSlide(v);
             }
         });
     }
 
-    private void getListImage() {
+    private void createSlide(View v) {
+        Bundle bundle =new Bundle();
+//        bundle.putStringArrayList("IMAGESELECTED",imageSelected);
+        NavController nav = Navigation.findNavController(v);
+//        nav.navigate();
+    }
+
+    void selectedImage(List<File> imageSelected){
+        try {
+            adapter=new ImageAdapter(imageSelected,getContext(),0);
+            GvSelected.setAdapter(adapter);
+        }
+        catch (Exception e){
+            Log.w(TAG,""+e);
+        }
 
     }
 
+    public void getListImage(String path) {
+        this.imageList.clear();
+        try{
+            File file = new File(path);
+            File[] files = file.listFiles();
+            for(File f:files){
+                if(f.getName().endsWith(".jpg")||f.getName().endsWith(".png")){
+                    this.imageList.add(f);
+                }
+            }
+            ImageAdapter adapter1;
+            adapter1= new ImageAdapter(this.imageList,getContext(),0);
+            GvImage.setAdapter(adapter1);
+//            adapter.notifyDataSetChanged();
+        }
+        catch (Exception e){
+            Log.w(TAG,""+e);
+        }
+        System.out.println(imageList.size());
+
+
+    }
 
     private void storingFolderExternal(File file) {
         File[] files = file.listFiles();
@@ -111,7 +160,7 @@ public class SlideshowMakerFragment extends Fragment {
                 }
             }
         }
-        adapterRecycleView=new FolderRecycleView(folderList,getContext());
+        adapterRecycleView=new FolderRecycleView(folderList,getContext(), this);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
         GvFolder.setLayoutManager(linearLayoutManager);
         GvFolder.setHasFixedSize(true);

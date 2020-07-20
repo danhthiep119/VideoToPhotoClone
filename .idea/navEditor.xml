@@ -35,8 +35,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="1007" />
-                            <option name="y" value="535" />
+                            <option name="x" value="1284" />
+                            <option name="y" value="525" />
                           </Point>
                         </option>
                         <option name="myPositions">
@@ -62,7 +62,7 @@
                         </option>
                         <option name="myPositions">
                           <map>
-                            <entry key="action_galleryFragment_to_imageListFragment">
+                            <entry key="action_galleryFragment_to_editPhotoFragment2">
                               <value>
                                 <LayoutPositions />
                               </value>
@@ -82,8 +82,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="656" />
-                            <option name="y" value="605" />
+                            <option name="x" value="876" />
+                            <option name="y" value="145" />
                           </Point>
                         </option>
                         <option name="myPositions">
@@ -161,7 +161,7 @@
                         </option>
                         <option name="myPositions">
                           <map>
-                            <entry key="action_selectedVideoFragment_to_videoEditFragment">
+                            <entry key="action_selectedVideoFragment_to_tabVideoFragment">
                               <value>
                                 <LayoutPositions />
                               </value>
@@ -176,8 +176,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="669" />
-                            <option name="y" value="997" />
+                            <option name="x" value="908" />
+                            <option name="y" value="1090" />
                           </Point>
                         </option>
                       </LayoutPositions>
@@ -195,13 +195,34 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="tabVideoFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="815" />
+                            <option name="y" value="-399" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_tabVideoFragment_to_imageListFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="timeCaptureVideo">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="941" />
-                            <option name="y" value="-115" />
+                            <option name="x" value="1254" />
+                            <option name="y" value="69" />
                           </Point>
                         </option>
                       </LayoutPositions>
@@ -212,18 +233,9 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="659" />
-                            <option name="y" value="260" />
+                            <option name="x" value="1172" />
+                            <option name="y" value="-373" />
                           </Point>
-                        </option>
-                        <option name="myPositions">
-                          <map>
-                            <entry key="action_videoEditFragment_to_imageListFragment">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                          </map>
                         </option>
                       </LayoutPositions>
                     </value>

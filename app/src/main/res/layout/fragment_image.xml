@@ -3,12 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ImageFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    tools:context=".View.ImageFragment">
+    <GridView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
-
+        android:id="@+id/gvListImage"
+        android:numColumns="3"
+        />
 </FrameLayout>

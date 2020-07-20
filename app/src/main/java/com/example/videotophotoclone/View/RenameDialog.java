@@ -10,13 +10,17 @@ import androidx.annotation.NonNull;
 
 import com.example.videotophotoclone.R;
 
+import java.io.File;
+
 public class RenameDialog extends Dialog {
     Context mContex;
     TextView txtRename;
     Button btnCancel,btnDone;
-    public RenameDialog(@NonNull Context context) {
+    String path = "";
+    public RenameDialog(@NonNull Context context,String path) {
         super(context);
         this.mContex=context;
+        this.path = path;
         setContentView(R.layout.rename_dialog);
         AddControls();
         AddEvents();
@@ -33,7 +37,12 @@ public class RenameDialog extends Dialog {
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = txtRename.getText().toString();
+                if(!txtRename.getText().toString().isEmpty()) {
+                    String name = txtRename.getText().toString();
+                    File file = new File(path);
+                    file.renameTo(new File(name+".mp4"));
+                }
+                dismiss();
             }
         });
     }

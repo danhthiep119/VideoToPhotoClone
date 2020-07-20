@@ -28,8 +28,13 @@ import java.util.List;
  */
 public class ImageListFragment extends Fragment {
     List<File> imageList = new ArrayList<>();
+    String path;
+    ImageAdapter adapter;
+
+
     public ImageListFragment() {
         // Required empty public constructor
+//        this.path=path;
     }
 
 
@@ -45,16 +50,21 @@ public class ImageListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         GridView gvListImage = view.findViewById(R.id.gvListImage);
         readImageFromExternalStorage();
-        gvListImage.setAdapter(new ImageAdapter(imageList,getContext()));
-
+//        adapter = new ImageAdapter(R.id.action_imageListFragment_to_editPhotoFragment2);
+        adapter = new ImageAdapter(imageList,getContext(),R.id.action_imageListFragment_to_editPhotoFragment2);
+        gvListImage.setAdapter(adapter);
     }
+
 
     private void readImageFromExternalStorage() {
         imageList.clear();
         File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/ScreenShots");
+        if(!file.exists()){
+            file.mkdirs();
+        }
         File[] files = file.listFiles();
         for(File f :files){
-            if(f.getName().endsWith(".jpg")){
+            if(f.getName().endsWith(".jpg")||f.getName().endsWith(".png")){
                 imageList.add(f);
             }
         }

@@ -46,16 +46,10 @@
             />
         <action
             android:id="@+id/action_galleryFragment_to_showVideo"
-            app:destination="@id/showVideo">
-            <argument
-                android:name="videoPath"
-                app:argType="string"
-                android:defaultValue="null"
-                />
-        </action>
+            app:destination="@id/showVideo" />
         <action
-            android:id="@+id/action_galleryFragment_to_imageListFragment"
-            app:destination="@id/imageListFragment" />
+            android:id="@+id/action_galleryFragment_to_editPhotoFragment2"
+            app:destination="@id/editPhotoFragment2" />
     </fragment>
 
     <fragment
@@ -75,22 +69,15 @@
         android:id="@+id/videoEditFragment"
         android:name="com.example.videotophotoclone.View.VideoEditFragment"
         android:label="fragment_video_edit"
-        tools:layout="@layout/fragment_video_edit" >
-        <action
-            android:id="@+id/action_videoEditFragment_to_imageListFragment"
-            app:destination="@id/imageListFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_video_edit" />
     <fragment
         android:id="@+id/selectedVideoFragment"
         android:name="com.example.videotophotoclone.View.SelectedVideoFragment"
         android:label="fragment_selected_video"
         tools:layout="@layout/fragment_selected_video" >
         <action
-            android:id="@+id/action_selectedVideoFragment_to_videoEditFragment"
-            app:destination="@id/videoEditFragment" />
-        <action
-            android:id="@+id/action_selectedVideoFragment_to_timeCaptureVideo"
-            app:destination="@id/timeCaptureVideo" />
+            android:id="@+id/action_selectedVideoFragment_to_tabVideoFragment"
+            app:destination="@id/tabVideoFragment" />
     </fragment>
     <fragment
         android:id="@+id/imageListFragment"
@@ -106,4 +93,13 @@
         android:name="com.example.videotophotoclone.View.TimeCaptureVideo"
         android:label="fragment_time_capture_video"
         tools:layout="@layout/fragment_time_capture_video" />
+    <fragment
+        android:id="@+id/tabVideoFragment"
+        android:name="com.example.videotophotoclone.View.TabVideoFragment"
+        android:label="fragment_tab_video"
+        tools:layout="@layout/fragment_tab_video" >
+        <action
+            android:id="@+id/action_tabVideoFragment_to_imageListFragment"
+            app:destination="@id/imageListFragment" />
+    </fragment>
 </navigation>

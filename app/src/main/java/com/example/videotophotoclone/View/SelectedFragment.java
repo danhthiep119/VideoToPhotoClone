@@ -55,6 +55,7 @@ public class SelectedFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         gvFolder = view.findViewById(R.id.gvFolder);
+        dir.clear();
         //Duyệt danh sách file trong bộ nhớ
         ArrayList<File> myVideo = ListDir(Environment.getExternalStorageDirectory());
         for (int i=0;i<dir.size()-1;i++){

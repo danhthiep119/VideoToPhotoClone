@@ -41,6 +41,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.sql.Struct;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -62,11 +63,14 @@ public class VideoEditFragment extends Fragment {
     List<Bitmap> captureImageList = new ArrayList<>();
     final String TAG = "Video Edit Fragment:";
     TypeSetting setting;
+    String videoPath="";
     static String endWiths = ".jpg";
+    Thread playVideo;
     FFmpegMediaMetadataRetriever mmr = new FFmpegMediaMetadataRetriever();
 
-    public VideoEditFragment() {
+    public VideoEditFragment(String path) {
         // Required empty public constructor
+        this.videoPath=path;
     }
 
 
@@ -90,7 +94,7 @@ public class VideoEditFragment extends Fragment {
         btnSnap = view.findViewById(R.id.btnSnap);
         imgSnap = view.findViewById(R.id.imgSnap);
         imgControlsVideo.setImageResource(R.drawable.ic_play_arrow_white_24dp);
-        final String videoPath = getArguments().getString("VIDEOPATH");
+//        final String videoPath = getArguments().getString("VIDEOPATH");
         try {
             getData(videoPath);
         } catch (IOException e) {
@@ -100,6 +104,7 @@ public class VideoEditFragment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.P)
             @Override
             public void onClick(View v) {
+                vdView.pause();
                 Bitmap bmFrame = mmr.getFrameAtTime(vdView.getCurrentPosition()*1000,FFmpegMediaMetadataRetriever.OPTION_CLOSEST);
                 captureImageList.add(bmFrame);
                 createFileImage(bmFrame,videoPath);
@@ -118,8 +123,10 @@ public class VideoEditFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 vdView.pause();
+                vdView.suspend();
+                Thread.currentThread().interrupt();
                 NavController nav = Navigation.findNavController(v);
-                nav.navigate(R.id.action_videoEditFragment_to_imageListFragment);
+                nav.navigate(R.id.action_tabVideoFragment_to_imageListFragment);
             }
         });
     }
@@ -127,7 +134,17 @@ public class VideoEditFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+//        vdView.pause();
+//        vdView.suspend();
+//        Thread.currentThread().interrupt();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         vdView.pause();
+        vdView.suspend();
+        Thread.currentThread().interrupt();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -187,6 +204,7 @@ public class VideoEditFragment extends Fragment {
             }
         });
         txtNameVideo.setText(videoFile.getName());
+
         imgControlsVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -219,28 +237,27 @@ public class VideoEditFragment extends Fragment {
             }
         });
         new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (vdView != null) {
-                    try {
-                        if (vdView.isPlaying()) {
-                            Message msg = new Message();
-                            msg.what = vdView.getCurrentPosition();
-                            handler.sendMessage(msg);
-                            Thread.sleep(1);
+                    @Override
+                    public void run() {
+                        while (vdView != null) {
+                            try {
+                                if (vdView.isPlaying()) {
+                                    Message msg = new Message();
+                                    msg.what = vdView.getCurrentPosition();
+                                    handler.sendMessage(msg);
+                                    Thread.sleep(1);
+                                }
+                            } catch (InterruptedException ie) {
+                                Log.w(TAG, "" + ie);
+                            }
+                            try {
+                                Thread.sleep(1);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                         }
-                        else {
-                            Message msg = new Message();
-                            msg.what = vdView.getCurrentPosition();
-                            handler.sendMessage(msg);
-                            Thread.sleep(1);
-                        }
-                    } catch (InterruptedException ie) {
-                        Log.w(TAG, "" + ie);
                     }
-                }
-            }
-        }).start();
+                }).start();
     }
 
 
@@ -251,6 +268,7 @@ public class VideoEditFragment extends Fragment {
             seekBar.setProgress(msg.what);
         }
     };
+
 
     String MilisecondsToTimer(long milisec) {
         String finalTimerString = "";

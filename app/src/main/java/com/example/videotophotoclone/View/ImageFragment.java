@@ -1,4 +1,4 @@
-package com.example.videotophotoclone;
+package com.example.videotophotoclone.View;
 
 import android.os.Bundle;
 
@@ -9,15 +9,26 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
+
+import com.example.videotophotoclone.Controler.ImageAdapter;
+import com.example.videotophotoclone.R;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ImageFragment extends Fragment {
-
-    public ImageFragment() {
+    List<File> imageList = new ArrayList<>();
+    String path = "";
+    ImageAdapter adapter;
+    public ImageFragment(String path) {
         // Required empty public constructor
+        this.path = path;
     }
 
 
@@ -31,5 +42,16 @@ public class ImageFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        imageList.clear();
+        GridView gvImageList = view.findViewById(R.id.gvListImage);
+        File file = new File(path);
+        File[] files = file.listFiles();
+        for(File f :files){
+            if(f.getName().endsWith(".jpg")){
+                imageList.add(f);
+            }
+        }
+        adapter=new ImageAdapter(imageList,getContext(),R.id.action_galleryFragment_to_editPhotoFragment2);
+        gvImageList.setAdapter(adapter);
     }
 }
