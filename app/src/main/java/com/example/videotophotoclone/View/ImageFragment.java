@@ -47,7 +47,7 @@ public class ImageFragment extends Fragment {
         File file = new File(path);
         File[] files = file.listFiles();
         for(File f :files){
-            if(f.getName().endsWith(".jpg")){
+            if(f.getName().endsWith(".jpg")||f.getName().endsWith(".png")){
                 imageList.add(f);
             }
         }

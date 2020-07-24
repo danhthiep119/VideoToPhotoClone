@@ -71,7 +71,7 @@ public class MainFragment extends Fragment {
         btnSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SettingDialog dialog=new SettingDialog(getContext());
+                SettingDialog dialog=new SettingDialog(getActivity());
                 dialog.show();
             }
         });

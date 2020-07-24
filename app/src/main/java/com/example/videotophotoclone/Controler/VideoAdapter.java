@@ -93,7 +93,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.DataBinding>
         String secondString;
         String minuteString;
         int seconds = (int) milisec % 60;
-        int minutes = (int) milisec / 60;
+        int minutes = seconds % 60;
         int hours = (int) milisec / (60 * 60);
         if (hours > 0) {
             finalTimerString = hours + ":";

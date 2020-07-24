@@ -32,11 +32,17 @@ public class TimeCaptureVideo extends Fragment {
     TextView txtName,txtCurrentTime,txtEndTime;
     ImageButton imgController;
     String path;
+    volatile boolean stopThread = false;
     public TimeCaptureVideo(String path) {
         // Required empty public constructor
         this.path = path;
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        stopThread = true;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,8 +81,8 @@ public class TimeCaptureVideo extends Fragment {
         range_seekbar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
             @Override
             public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
-                int max_duration = (int)bar.getSelectedMaxValue();
-                int min_duration = (int)bar.getSelectedMinValue();
+                int max_duration = vdViewTimeCapture.getDuration();
+                int min_duration = vdViewTimeCapture.getCurrentPosition();
 
                 txtEndTime.setText(MilisecondsToTimer(max_duration/1000));
                 txtCurrentTime.setText(MilisecondsToTimer(min_duration/1000));
@@ -102,6 +108,14 @@ public class TimeCaptureVideo extends Fragment {
                         Message msg = new Message();
                         msg.what = vdViewTimeCapture.getCurrentPosition();
                         handler.sendMessage(msg);
+                    }
+                    else {
+                        Message msg = new Message();
+                        msg.what = vdViewTimeCapture.getCurrentPosition();
+                        handler.sendMessage(msg);
+                    }
+                    if(stopThread){
+                        return;
                     }
                     try {
                         Thread.sleep(1);

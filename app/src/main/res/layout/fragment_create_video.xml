@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorForest"
+    tools:context=".View.CreateVideo">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <VideoView
+            android:id="@+id/vdVideoMake"
+            android:layout_width="275dp"
+            android:layout_height="275dp"
+            android:layout_marginTop="50dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtSetNameVideo"
+            app:layout_constraintTop_toBottomOf="@+id/vdVideoMake"
+            app:layout_constraintLeft_toLeftOf="@+id/vdVideoMake"
+            app:layout_constraintRight_toRightOf="@+id/vdVideoMake"
+            />
+        <org.florescu.android.rangeseekbar.RangeSeekBar
+            android:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/range_music"
+            app:layout_constraintTop_toBottomOf="@+id/txtSetNameVideo"
+            />
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorYellow"
+            android:id="@+id/nav_edit_create_video"
+            app:menu="@menu/item_create_video_bottom"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:background="@color/colorYellow"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:textSize="18dp"
+            android:text="Make Video"
+            android:id="@+id/btnMakeVideo"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/nav_edit_create_video"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

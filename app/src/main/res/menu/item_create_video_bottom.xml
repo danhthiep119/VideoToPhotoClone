@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title="@string/AddImage"
+        android:icon="@drawable/ic_add_to_photos_black_24dp"
+        android:id="@+id/nav_add_more_photo"
+        />
+    <item
+        android:title="@string/SlideSec"
+        android:icon="@drawable/ic_slideshow_black_24dp"
+        android:id="@+id/nav_set_slide_per_sec"
+        />
+    <item
+        android:title="@string/Music"
+        android:icon="@drawable/ic_library_music_black_24dp"
+        android:id="@+id/nav_music"
+        />
+</menu>

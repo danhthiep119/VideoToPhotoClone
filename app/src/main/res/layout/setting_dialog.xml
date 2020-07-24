@@ -15,18 +15,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         />
+
     <Button
         android:id="@+id/btnFileFormat"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="JPG"
-        android:textSize="24dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="35dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        android:text="JPG"
+        android:textSize="24dp"
+        app:layout_constraintStart_toEndOf="@+id/fileFormat"
+        app:layout_constraintTop_toTopOf="parent" />
     <TextView
         android:id="@+id/quality"
         android:layout_width="wrap_content"

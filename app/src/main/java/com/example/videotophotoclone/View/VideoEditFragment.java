@@ -1,5 +1,7 @@
 package com.example.videotophotoclone.View;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.media.MediaMetadata;
 import android.media.MediaMetadataRetriever;
@@ -62,17 +64,22 @@ public class VideoEditFragment extends Fragment {
     ImageView imgSnap;
     List<Bitmap> captureImageList = new ArrayList<>();
     final String TAG = "Video Edit Fragment:";
-    TypeSetting setting;
+    String type = "";
     String videoPath="";
     static String endWiths = ".jpg";
-    Thread playVideo;
     FFmpegMediaMetadataRetriever mmr = new FFmpegMediaMetadataRetriever();
-
+    volatile boolean stopthread = false;
     public VideoEditFragment(String path) {
         // Required empty public constructor
         this.videoPath=path;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        SharedPreferences mShared = getActivity().getPreferences(Context.MODE_PRIVATE);
+        type = mShared.getString("TYPE","JPG");
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,6 +107,7 @@ public class VideoEditFragment extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         btnSnap.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.P)
             @Override
@@ -109,6 +117,8 @@ public class VideoEditFragment extends Fragment {
                 captureImageList.add(bmFrame);
                 createFileImage(bmFrame,videoPath);
                 imgSnap.setImageBitmap(bmFrame);
+//                imgControlsVideo.setImageResource(R.drawable.ic_play_arrow_white_24dp);
+                checkPlay(false);
             }
         });
         try {
@@ -130,22 +140,23 @@ public class VideoEditFragment extends Fragment {
             }
         });
     }
+    void checkPlay(boolean isPlaying){
+        if(isPlaying){
+            imgControlsVideo.setImageResource(R.drawable.ic_pause_white_24dp);
+        }
+        if(!isPlaying){
+            imgControlsVideo.setImageResource(R.drawable.ic_play_arrow_white_24dp);
+        }
+    }
 
     @Override
     public void onStop() {
         super.onStop();
-//        vdView.pause();
-//        vdView.suspend();
-//        Thread.currentThread().interrupt();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+        stopthread = true;
         vdView.pause();
         vdView.suspend();
-        Thread.currentThread().interrupt();
     }
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void createFileImage(Bitmap bimap,String videoPath) {
@@ -157,18 +168,18 @@ public class VideoEditFragment extends Fragment {
         }
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm");
 //        LocalDateTime now = LocalDateTime.now();
-
+        Log.w(TAG,type);
         Bitmap.CompressFormat bitmap = Bitmap.CompressFormat.JPEG;
-        if(setting.type.equals("JPG")){
+        if(type.equals("JPG")){
             endWiths = ".jpg";
             bitmap = Bitmap.CompressFormat.JPEG;
         }
-        if(setting.type.equals("PNG")){
+        if(type.equals("PNG")){
             endWiths = ".png";
             bitmap = Bitmap.CompressFormat.PNG;
         }
-//        String fileName = String.format(formatter.format(now)+endWiths);
         String fileName = System.currentTimeMillis()+endWiths;
+//        String fileName = String.format(formatter.format(now)+endWiths);
         File outFile = new File(file,fileName);
         try {
             FileOutputStream fos = new FileOutputStream(outFile);
@@ -210,10 +221,10 @@ public class VideoEditFragment extends Fragment {
             public void onClick(View v) {
                 if (!vdView.isPlaying()) {
                     vdView.start();
-                    imgControlsVideo.setImageResource(R.drawable.ic_pause_white_24dp);
+                    checkPlay(true);
                 } else {
                     vdView.pause();
-                    imgControlsVideo.setImageResource(R.drawable.ic_play_arrow_white_24dp);
+                    checkPlay(false);
                 }
             }
         });
@@ -246,6 +257,15 @@ public class VideoEditFragment extends Fragment {
                                     msg.what = vdView.getCurrentPosition();
                                     handler.sendMessage(msg);
                                     Thread.sleep(1);
+                                }
+                                else {
+                                    Message msg = new Message();
+                                    msg.what = vdView.getCurrentPosition();
+                                    handler.sendMessage(msg);
+                                    Thread.sleep(1);
+                                }
+                                if (stopthread){
+                                    return;
                                 }
                             } catch (InterruptedException ie) {
                                 Log.w(TAG, "" + ie);

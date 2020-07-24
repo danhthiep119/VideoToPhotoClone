@@ -30,13 +30,34 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
+                  <entry key="createVideo">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="607" />
+                            <option name="y" value="877" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_createVideo_to_musicList">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="editPhotoFragment2">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="1284" />
-                            <option name="y" value="525" />
+                            <option name="x" value="1163" />
+                            <option name="y" value="429" />
                           </Point>
                         </option>
                         <option name="myPositions">
@@ -56,8 +77,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="430" />
-                            <option name="y" value="668" />
+                            <option name="x" value="443" />
+                            <option name="y" value="318" />
                           </Point>
                         </option>
                         <option name="myPositions">
@@ -129,6 +150,27 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="musicList">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="902" />
+                            <option name="y" value="932" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_musicList_to_createVideo">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="selectedFragment">
                     <value>
                       <LayoutPositions>
@@ -176,8 +218,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="908" />
-                            <option name="y" value="1090" />
+                            <option name="x" value="710" />
+                            <option name="y" value="533" />
                           </Point>
                         </option>
                       </LayoutPositions>
@@ -188,9 +230,18 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="405" />
-                            <option name="y" value="231" />
+                            <option name="x" value="281" />
+                            <option name="y" value="792" />
                           </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_slideshowMakerFragment_to_createVideo">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
                         </option>
                       </LayoutPositions>
                     </value>
@@ -221,8 +272,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="1254" />
-                            <option name="y" value="69" />
+                            <option name="x" value="1155" />
+                            <option name="y" value="41" />
                           </Point>
                         </option>
                       </LayoutPositions>
@@ -233,8 +284,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="1172" />
-                            <option name="y" value="-373" />
+                            <option name="x" value="1126" />
+                            <option name="y" value="-394" />
                           </Point>
                         </option>
                       </LayoutPositions>

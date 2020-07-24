@@ -52,8 +52,8 @@ public class FolderRecycleView extends RecyclerView.Adapter<FolderRecycleView.Da
             public void onClick(View v) {
                 isChecked = true;
                 if(isChecked){
-                    v.setBackgroundColor(Color.parseColor("#0008FF"));
-                    holder.txtName.setTextColor(Color.parseColor("#FFFFFF"));
+//                    v.setBackgroundColor(Color.parseColor("#0008FF"));
+//                    holder.txtName.setTextColor(Color.parseColor("#FFFFFF"));
                     Toast.makeText(mContext,"Bạn Mở Thư mục: "+ folderList.get(position).getName(),Toast.LENGTH_SHORT).show();
                     String path = folderList.get(position).getAbsolutePath();
                     fmSideShow.getListImage(path);

@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -33,6 +34,9 @@ import androidx.navigation.Navigation;
 
 import com.example.videotophotoclone.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageActivity;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
 
@@ -50,6 +54,9 @@ public class EditPhotoFragment extends Fragment {
     Button btnOk,btnColor,btnErase;
     ImageButton btnInfo;
     SeekBar sizeBrush;
+    PhotoEditorView mPhotoEditorView;
+    CropImageView mCropImage;
+    final int PIC_CROP=1;
     public EditPhotoFragment() {
     }
 
@@ -64,8 +71,8 @@ public class EditPhotoFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        ImageView imgShow = view.findViewById(R.id.imgShow);
-        PhotoEditorView mPhotoEditorView = view.findViewById(R.id.photo_editor);
+        mPhotoEditorView = view.findViewById(R.id.photo_editor);
+        mCropImage = view.findViewById(R.id.crop_image);
         sizeBrush = view.findViewById(R.id.seek_bar_size_brush);
         txtInsertText = view.findViewById(R.id.txtInsertText);
         btnOk = view.findViewById(R.id.btnOk);
@@ -82,13 +89,11 @@ public class EditPhotoFragment extends Fragment {
         path = getArguments().getString("IMAGEPATH");
         File file = new File(path);
         Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-//        imgShow.setImageBitmap(bitmap);
         mPhotoEditorView.getSource().setImageBitmap(bitmap);
-        Typeface mTextFont = ResourcesCompat.getFont(getContext(),R.font.greatvibes_regular);
-//        Typeface emoji = Typeface.createFromAsset(getContext().getAssets(),"");
+//        Typeface mTextFont = ResourcesCompat.getFont(getContext(),R.font.greatvibes_regular);
         mPhotoEditor =new PhotoEditor.Builder(getContext(),mPhotoEditorView)
                 .setPinchTextScalable(true)
-                .setDefaultTextTypeface(mTextFont)
+//                .setDefaultTextTypeface(mTextFont)
                 .build();
         bottomNavigationView = view.findViewById(R.id.nav_bottom_edit);
         bottomNavigationView.setOnNavigationItemSelectedListener(listener);
@@ -99,6 +104,8 @@ public class EditPhotoFragment extends Fragment {
                     @Override
                     public void onSuccess(@NonNull String imagePath) {
                         Toast.makeText(getContext(),"Saved",Toast.LENGTH_SHORT).show();
+                        Bitmap bitmap = BitmapFactory.decodeFile(path);
+                        mPhotoEditorView.getSource().setImageBitmap(bitmap);
                     }
 
                     @Override
@@ -141,8 +148,10 @@ public class EditPhotoFragment extends Fragment {
                     break;
                 case R.id.nav_text:
                     mPhotoEditor.setBrushDrawingMode(false);
+                    mPhotoEditorView.setVisibility(View.VISIBLE);
                     textZone.setVisibility(View.VISIBLE);
                     brushZone.setVisibility(View.INVISIBLE);
+                    mCropImage.setVisibility(View.INVISIBLE);
                     btnOk.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -152,25 +161,53 @@ public class EditPhotoFragment extends Fragment {
                     });
                     break;
                 case R.id.nav_paint:
+                    mPhotoEditorView.setVisibility(View.VISIBLE);
                     textZone.setVisibility(View.INVISIBLE);
                     brushZone.setVisibility(View.VISIBLE);
+                    mCropImage.setVisibility(View.INVISIBLE);
                     drawInImage();
                     break;
                 case R.id.nav_cut:
                     mPhotoEditor.setBrushDrawingMode(false);
+                    mPhotoEditorView.setVisibility(View.INVISIBLE);
                     textZone.setVisibility(View.INVISIBLE);
                     brushZone.setVisibility(View.INVISIBLE);
+                    mCropImage.setVisibility(View.VISIBLE);
+                    cropImage(mCropImage);
                     break;
                 case R.id.nav_sticker:
                     mPhotoEditor.setBrushDrawingMode(false);
+                    mPhotoEditorView.setVisibility(View.VISIBLE);
                     textZone.setVisibility(View.INVISIBLE);
                     brushZone.setVisibility(View.INVISIBLE);
+                    mCropImage.setVisibility(View.INVISIBLE);
                     insertEmojiorImage();
                     break;
             }
             return true;
         }
     };
+
+    private void cropImage(final CropImageView cropImage){
+        File file = new File(path);
+        Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+        cropImage.setImageBitmap(bitmap);
+        btnInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse(path);
+                cropImage.saveCroppedImageAsync(uri);
+                Toast.makeText(getContext(),"Save Success!",Toast.LENGTH_SHORT).show();
+            }
+        });
+        cropImage.setOnCropImageCompleteListener(new CropImageView.OnCropImageCompleteListener() {
+            @Override
+            public void onCropImageComplete(CropImageView view, CropImageView.CropResult result) {
+                Bitmap croped = result.getBitmap();
+                mPhotoEditorView.getSource().setImageBitmap(croped);
+            }
+        });
+    }
 
     private void insertEmojiorImage() {
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.ic_folder_black_24dp);
@@ -179,7 +216,6 @@ public class EditPhotoFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void drawInImage() {
-
         mPhotoEditor.setBrushDrawingMode(true);
         sizeBrush.setMax((int) 24.0f);
         sizeBrush.setMin((int) 1.0f);

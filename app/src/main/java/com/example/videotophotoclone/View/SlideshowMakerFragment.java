@@ -59,6 +59,17 @@ public class SlideshowMakerFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_slideshow_maker, container, false);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.w(TAG,"onResume");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.w(TAG,"onPause");
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -93,6 +104,14 @@ public class SlideshowMakerFragment extends Fragment {
 
             }
         });
+        GvImage.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getContext(),"Bạn Chọn 1"+imageList.get(position).getAbsolutePath(),Toast.LENGTH_SHORT).show();
+                imageSelected.add(imageList.get(position));
+                selectedImage(imageSelected);
+            }
+        });
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,10 +121,14 @@ public class SlideshowMakerFragment extends Fragment {
     }
 
     private void createSlide(View v) {
+        ArrayList<String> listPath=new ArrayList<>();
+        for(File item :imageSelected){
+            listPath.add(item.getAbsolutePath());
+        }
         Bundle bundle =new Bundle();
-//        bundle.putStringArrayList("IMAGESELECTED",imageSelected);
+        bundle.putStringArrayList("IMAGESELECTED",listPath);
         NavController nav = Navigation.findNavController(v);
-//        nav.navigate();
+        nav.navigate(R.id.action_slideshowMakerFragment_to_createVideo,bundle);
     }
 
     void selectedImage(List<File> imageSelected){
@@ -137,9 +160,6 @@ public class SlideshowMakerFragment extends Fragment {
         catch (Exception e){
             Log.w(TAG,""+e);
         }
-        System.out.println(imageList.size());
-
-
     }
 
     private void storingFolderExternal(File file) {
@@ -154,7 +174,7 @@ public class SlideshowMakerFragment extends Fragment {
             }
         }
         for (int i=0;i<folderList.size()-1;i++){
-            for (int j=1;j<folderList.size();j++){
+            for (int j=i+1;j<folderList.size();j++){
                 if (folderList.get(i).equals(folderList.get(j))){
                     folderList.remove(j);
                 }

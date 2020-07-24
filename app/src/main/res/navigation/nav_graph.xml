@@ -33,7 +33,11 @@
         android:id="@+id/slideshowMakerFragment"
         android:name="com.example.videotophotoclone.View.SlideshowMakerFragment"
         android:label="@string/SlideshowMaker"
-        tools:layout="@layout/fragment_slideshow_maker" />
+        tools:layout="@layout/fragment_slideshow_maker" >
+        <action
+            android:id="@+id/action_slideshowMakerFragment_to_createVideo"
+            app:destination="@id/createVideo" />
+    </fragment>
     <fragment
         android:id="@+id/galleryFragment"
         android:name="com.example.videotophotoclone.View.GalleryFragment"
@@ -101,5 +105,26 @@
         <action
             android:id="@+id/action_tabVideoFragment_to_imageListFragment"
             app:destination="@id/imageListFragment" />
+        <action
+            android:id="@+id/action_tabVideoFragment_to_galleryFragment"
+            app:destination="@id/galleryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createVideo"
+        android:name="com.example.videotophotoclone.View.CreateVideo"
+        android:label="fragment_create_video"
+        tools:layout="@layout/fragment_create_video" >
+        <action
+            android:id="@+id/action_createVideo_to_musicList"
+            app:destination="@id/musicList" />
+    </fragment>
+    <fragment
+        android:id="@+id/musicList"
+        android:name="com.example.videotophotoclone.View.MusicList"
+        android:label="fragment_music_list"
+        tools:layout="@layout/fragment_music_list" >
+        <action
+            android:id="@+id/action_musicList_to_createVideo"
+            app:destination="@id/createVideo" />
     </fragment>
 </navigation>
