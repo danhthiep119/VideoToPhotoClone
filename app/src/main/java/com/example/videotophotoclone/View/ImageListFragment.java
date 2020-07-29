@@ -5,8 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -15,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 
 import com.example.videotophotoclone.Controler.ImageAdapter;
-import com.example.videotophotoclone.Model.Video;
 import com.example.videotophotoclone.R;
 
 import java.io.File;

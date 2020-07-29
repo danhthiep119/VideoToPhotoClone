@@ -1,62 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".View.TimeCaptureVideo">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_height="match_parent">
-    <VideoView
-        android:layout_width="0dp"
-        android:layout_height="250dp"
-        android:id="@+id/vdViewTimeCapture"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        />
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imgControlsVideo"
-        app:layout_constraintBottom_toTopOf="@+id/txtNameVideo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/vdViewTimeCapture"
-        app:layout_constraintTop_toTopOf="@+id/vdViewTimeCapture" />
+        <VideoView
+            android:id="@+id/vdViewTimeCapture"
+            android:layout_width="0dp"
+            android:layout_height="250dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/vdViewTimeCapture"
-        android:text="Video Name"
-        android:gravity="center"
-        android:id="@+id/txtNameVideo"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="00:00"
-        android:id="@+id/txtCurrentTime"
-        app:layout_constraintTop_toBottomOf="@+id/txtNameVideo"
-        app:layout_constraintLeft_toLeftOf="parent"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtEndTime"
-        app:layout_constraintTop_toBottomOf="@+id/txtNameVideo"
-        app:layout_constraintRight_toRightOf="parent"
-        android:text="00:00"
-        />
-    <org.florescu.android.rangeseekbar.RangeSeekBar
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/range_seekbar"
-        app:layout_constraintTop_toBottomOf="@+id/txtNameVideo"
-        app:layout_constraintLeft_toRightOf="@id/txtCurrentTime"
-        app:layout_constraintRight_toLeftOf="@+id/txtEndTime"
-        />
+        <ImageButton
+            android:id="@+id/imgControlsVideo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/txtNameVideo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/vdViewTimeCapture"
+            app:layout_constraintTop_toTopOf="@+id/vdViewTimeCapture" />
+
+        <TextView
+            android:id="@+id/txtNameVideo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Video Name"
+            app:layout_constraintTop_toBottomOf="@+id/vdViewTimeCapture" />
+
+        <TextView
+            android:id="@+id/txtCurrentTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtNameVideo" />
+
+        <TextView
+            android:id="@+id/txtEndTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtNameVideo" />
+
+        <org.florescu.android.rangeseekbar.RangeSeekBar
+            android:id="@+id/range_seekbar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@id/txtCurrentTime"
+            app:layout_constraintRight_toLeftOf="@+id/txtEndTime"
+            app:layout_constraintTop_toBottomOf="@+id/txtNameVideo" />
+
+        <ImageButton
+            android:id="@+id/btnSnap"
+            android:layout_width="75dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_photo_camera_black_24dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnDone" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Snap Every 2.0 sec"
+            android:id="@+id/btnSetTime"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/btnDone"
+            app:layout_constraintTop_toTopOf="@id/btnDone" />
+
+        <Button
+            android:id="@+id/btnDone"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DONE"
+            android:textSize="20dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/range_seekbar" />
+
+        <ImageView
+            android:id="@+id/imgSnap"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnSnap" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

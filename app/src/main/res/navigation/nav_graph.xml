@@ -59,7 +59,7 @@
     <fragment
         android:id="@+id/editPhotoFragment2"
         android:name="com.example.videotophotoclone.View.EditPhotoFragment"
-        android:label="EditPhotoFragment" >
+        android:label="@string/EditPhoto" >
         <action
             android:id="@+id/action_editPhotoFragment2_to_imageListFragment"
             app:destination="@id/imageListFragment" />
@@ -77,7 +77,7 @@
     <fragment
         android:id="@+id/selectedVideoFragment"
         android:name="com.example.videotophotoclone.View.SelectedVideoFragment"
-        android:label="fragment_selected_video"
+        android:label="@string/SelectedVideo"
         tools:layout="@layout/fragment_selected_video" >
         <action
             android:id="@+id/action_selectedVideoFragment_to_tabVideoFragment"
@@ -100,7 +100,7 @@
     <fragment
         android:id="@+id/tabVideoFragment"
         android:name="com.example.videotophotoclone.View.TabVideoFragment"
-        android:label="fragment_tab_video"
+        android:label="@string/VideoToPhoto"
         tools:layout="@layout/fragment_tab_video" >
         <action
             android:id="@+id/action_tabVideoFragment_to_imageListFragment"
@@ -112,7 +112,7 @@
     <fragment
         android:id="@+id/createVideo"
         android:name="com.example.videotophotoclone.View.CreateVideo"
-        android:label="fragment_create_video"
+        android:label="@string/CreateVideo"
         tools:layout="@layout/fragment_create_video" >
         <action
             android:id="@+id/action_createVideo_to_musicList"
@@ -121,7 +121,7 @@
     <fragment
         android:id="@+id/musicList"
         android:name="com.example.videotophotoclone.View.MusicList"
-        android:label="fragment_music_list"
+        android:label="@string/MusicList"
         tools:layout="@layout/fragment_music_list" >
         <action
             android:id="@+id/action_musicList_to_createVideo"

@@ -80,22 +80,12 @@ public class ImageAdapter extends BaseAdapter {
                         btnDel.setImageResource(R.drawable.ic_radio_button_unchecked_black_24dp);
                     }
                 }
-
-
             }
         });
+
         view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-//                if(selectMode = false)
-//                {
-//                    btnDel.setVisibility(View.VISIBLE);
-//                    selectMode=true;
-//                }
-//                else {
-//                    btnDel.setVisibility(View.INVISIBLE);
-//                    selectMode=false;
-//                }
                 selectMode = true;
                 btnDel.setVisibility(View.VISIBLE);
                 return true;

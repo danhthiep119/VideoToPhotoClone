@@ -251,12 +251,17 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="815" />
-                            <option name="y" value="-399" />
+                            <option name="x" value="857" />
+                            <option name="y" value="-381" />
                           </Point>
                         </option>
                         <option name="myPositions">
                           <map>
+                            <entry key="action_tabVideoFragment_to_galleryFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="action_tabVideoFragment_to_imageListFragment">
                               <value>
                                 <LayoutPositions />

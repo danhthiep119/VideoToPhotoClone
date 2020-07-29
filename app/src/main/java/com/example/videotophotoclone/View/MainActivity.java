@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     public Toolbar toolbar;
     final int REQUEST_CODE = 1;
     final String defType = "JPG";
+    final String defQuality = "High";
     final String TAG = "Main Activity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,35 +45,8 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(toolbar,navController,configuration);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.w(TAG,"on Stop Calling");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.w(TAG,"on Start Calling");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.w(TAG,"on Pause Calling");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        readDataSharedReference();
-        Log.w(TAG,"on Resume Calling");
-    }
-
     private void readDataSharedReference() {
         SharedPreferences sharePref = this.getPreferences(Context.MODE_PRIVATE);
-        String type = sharePref.getString("TYPE",defType);
-        System.out.println(type);
     }
 
     private void createFolder() {

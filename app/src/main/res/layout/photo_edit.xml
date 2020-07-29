@@ -7,102 +7,131 @@
     tools:context=".View.MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:id="@+id/CustomLayout"
-        >
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
         <ImageButton
+            android:id="@+id/info_image"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:id="@+id/info_image"
-            android:src="@drawable/ic_info_black_24dp"
             android:layout_marginTop="15dp"
-            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_info_black_24dp"
             app:layout_constraintRight_toRightOf="@+id/photo_editor"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btnSave"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/save"
+            app:layout_constraintLeft_toLeftOf="@+id/photo_editor"
+            app:layout_constraintTop_toTopOf="@+id/info_image" />
+
+        <Button
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:textSize="16dp"
+            android:layout_width="75dp"
+            android:layout_height="50dp"
+            android:id="@+id/btnCropImage"
+            android:text="@string/CropImage"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toStartOf="@+id/info_image"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/btnSave"
+            app:layout_constraintTop_toTopOf="@+id/info_image" />
 
         <com.theartofdev.edmodo.cropper.CropImageView
             android:id="@+id/crop_image"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="15dp"
             android:visibility="invisible"
             app:layout_constraintBottom_toTopOf="@+id/nav_bottom_edit"
-            app:layout_constraintTop_toBottomOf="@+id/info_image"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/info_image" />
+
         <ja.burhanrashid52.photoeditor.PhotoEditorView
+            android:id="@+id/photo_editor"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginLeft="15dp"
-            android:id="@+id/photo_editor"
+            android:layout_marginBottom="15dp"
             app:layout_constraintBottom_toTopOf="@+id/nav_bottom_edit"
-            app:layout_constraintTop_toBottomOf="@+id/info_image"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/info_image" />
+
         <LinearLayout
+            android:id="@+id/brush_zone"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:id="@+id/brush_zone"
-            app:layout_constraintBottom_toTopOf="@+id/nav_bottom_edit"
-            >
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/nav_bottom_edit">
+
             <SeekBar
-                android:layout_width="250dp"
-                android:layout_height="match_parent"
                 android:id="@+id/seek_bar_size_brush"
-                />
+                android:layout_width="250dp"
+                android:layout_height="match_parent" />
+
             <Button
+                android:id="@+id/btnColor"
                 android:layout_width="75dp"
                 android:layout_height="match_parent"
-                android:id="@+id/btnColor"
-                android:background="@color/black"
-                />
+                android:background="@color/black" />
+
             <Button
+                android:id="@+id/btnErase"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/btnErase"
                 android:text="Tẩy"
-                android:textSize="24dp"
-                />
+                android:textSize="24dp" />
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/textZone"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            app:layout_constraintBottom_toTopOf="@+id/nav_bottom_edit"
-            >
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/nav_bottom_edit">
+
             <EditText
+                android:id="@+id/txtInsertText"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:hint="Nhập Chữ vào!!"
-                android:textSize="24dp"
-                android:id="@+id/txtInsertText"
-                />
+                android:textSize="24dp" />
+
             <Button
+                android:id="@+id/btnOk"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="@string/Ok"
-                android:textSize="24dp"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:id="@+id/btnOk"
-                />
+                android:textSize="24dp" />
         </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvSticker"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:orientation="horizontal"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/nav_bottom_edit" />
+
         <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/nav_bottom_edit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/nav_bottom_edit"
-            app:menu="@menu/item_image"
-            android:background="?android:attr/windowBackground"
             android:layout_alignParentBottom="true"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
+            android:background="?android:attr/windowBackground"
             app:layout_constraintBottom_toBottomOf="parent"
-            />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:menu="@menu/item_image" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

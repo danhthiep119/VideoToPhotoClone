@@ -54,11 +54,14 @@ public class VideoListFragment extends Fragment {
                 videoList.add(f);
             }
         }
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
-        lvVideoList.setLayoutManager(linearLayoutManager);
-        lvVideoList.setHasFixedSize(true);
-        adapter = new VideoAdapter(videoList,getContext());
-        lvVideoList.setAdapter(adapter);
+        if(!videoList.isEmpty())
+        {
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+            lvVideoList.setLayoutManager(linearLayoutManager);
+            lvVideoList.setHasFixedSize(true);
+            adapter = new VideoAdapter(videoList,getContext());
+            lvVideoList.setAdapter(adapter);
 
+        }
     }
 }

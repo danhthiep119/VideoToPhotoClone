@@ -3,11 +3,8 @@ package com.example.videotophotoclone.View;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.media.MediaMetadata;
-import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -21,7 +18,6 @@ import androidx.navigation.Navigation;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,21 +25,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
-import com.example.videotophotoclone.Model.TypeSetting;
 import com.example.videotophotoclone.R;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.sql.Struct;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -65,6 +56,7 @@ public class VideoEditFragment extends Fragment {
     List<Bitmap> captureImageList = new ArrayList<>();
     final String TAG = "Video Edit Fragment:";
     String type = "";
+    String quality = "";
     String videoPath="";
     static String endWiths = ".jpg";
     FFmpegMediaMetadataRetriever mmr = new FFmpegMediaMetadataRetriever();
@@ -79,6 +71,8 @@ public class VideoEditFragment extends Fragment {
         super.onStart();
         SharedPreferences mShared = getActivity().getPreferences(Context.MODE_PRIVATE);
         type = mShared.getString("TYPE","JPG");
+        quality = mShared.getString("QUALITY",getContext().getResources().getString(R.string.High));
+        System.out.println(quality);
     }
 
     @Override
@@ -101,7 +95,6 @@ public class VideoEditFragment extends Fragment {
         btnSnap = view.findViewById(R.id.btnSnap);
         imgSnap = view.findViewById(R.id.imgSnap);
         imgControlsVideo.setImageResource(R.drawable.ic_play_arrow_white_24dp);
-//        final String videoPath = getArguments().getString("VIDEOPATH");
         try {
             getData(videoPath);
         } catch (IOException e) {
@@ -113,11 +106,11 @@ public class VideoEditFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 vdView.pause();
-                Bitmap bmFrame = mmr.getFrameAtTime(vdView.getCurrentPosition()*1000,FFmpegMediaMetadataRetriever.OPTION_CLOSEST);
+                int currentTime =vdView.getCurrentPosition()*1000;
+                Bitmap bmFrame = mmr.getFrameAtTime(currentTime,FFmpegMediaMetadataRetriever.OPTION_CLOSEST);
                 captureImageList.add(bmFrame);
-                createFileImage(bmFrame,videoPath);
+                createFileImage(bmFrame);
                 imgSnap.setImageBitmap(bmFrame);
-//                imgControlsVideo.setImageResource(R.drawable.ic_play_arrow_white_24dp);
                 checkPlay(false);
             }
         });
@@ -133,10 +126,16 @@ public class VideoEditFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 vdView.pause();
-                vdView.suspend();
-                Thread.currentThread().interrupt();
+                stopthread = true;
                 NavController nav = Navigation.findNavController(v);
-                nav.navigate(R.id.action_tabVideoFragment_to_imageListFragment);
+                nav.navigate(R.id.action_tabVideoFragment_to_galleryFragment);
+            }
+        });
+        imgSnap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavController nav = Navigation.findNavController(v);
+                nav.navigate(R.id.action_tabVideoFragment_to_galleryFragment);
             }
         });
     }
@@ -157,18 +156,19 @@ public class VideoEditFragment extends Fragment {
         vdView.suspend();
     }
 
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void createFileImage(Bitmap bimap,String videoPath) {
-        File filePath = new File(videoPath);
-        filePath = new File(filePath.getName());
+    private void createFileImage(Bitmap bimap) {
         File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/ScreenShots");
         if(!file.exists()){
             file.mkdirs();
         }
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm");
-//        LocalDateTime now = LocalDateTime.now();
-        Log.w(TAG,type);
+        DateTimeFormatter formatter = null;
+        String fileName = "";
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+            fileName = String.format(formatter.format(now)+endWiths);
+        }
+        else fileName = System.currentTimeMillis()+endWiths;
         Bitmap.CompressFormat bitmap = Bitmap.CompressFormat.JPEG;
         if(type.equals("JPG")){
             endWiths = ".jpg";
@@ -178,12 +178,10 @@ public class VideoEditFragment extends Fragment {
             endWiths = ".png";
             bitmap = Bitmap.CompressFormat.PNG;
         }
-        String fileName = System.currentTimeMillis()+endWiths;
-//        String fileName = String.format(formatter.format(now)+endWiths);
         File outFile = new File(file,fileName);
         try {
             FileOutputStream fos = new FileOutputStream(outFile);
-            bimap.compress(bitmap,100,fos);
+            bimap.compress(bitmap,setQuality(quality),fos);
             fos.flush();
             fos.close();
         } catch (FileNotFoundException e) {
@@ -191,7 +189,25 @@ public class VideoEditFragment extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    int setQuality(String quality){
+        if(quality.equals(getResources().getString(R.string.Best))){
+            return 100;
+        }
+        else if(quality.equals(getResources().getString(R.string.VeryHigh))){
+            return 85;
+        }
+        else if(quality.equals(getResources().getString(R.string.High))){
+            return 75;
+        }
+        else if(quality.equals(getResources().getString(R.string.Medium))){
+            return 65;
+        }
+        else if(quality.equals(getResources().getString(R.string.Low))){
+            return 50;
+        }
+        else return 75;
     }
 
     private void getData(String videoPath) throws IOException {
@@ -230,7 +246,7 @@ public class VideoEditFragment extends Fragment {
         });
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            public void onProgressChanged(SeekBar seekBar, final int progress, boolean fromUser) {
                 if (fromUser) {
                     vdView.seekTo(progress);
                     seekBar.setProgress(progress);

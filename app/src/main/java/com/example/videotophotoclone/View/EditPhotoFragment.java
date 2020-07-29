@@ -5,8 +5,8 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,30 +15,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.videotophotoclone.Controler.StickerRecycleAdapter;
 import com.example.videotophotoclone.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageActivity;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
+import java.text.DecimalFormat;
 
 import ja.burhanrashid52.photoeditor.PhotoEditor;
 import ja.burhanrashid52.photoeditor.PhotoEditorView;
@@ -51,12 +52,12 @@ public class EditPhotoFragment extends Fragment {
     Typeface mTextFont;
     LinearLayout textZone,brushZone;
     EditText txtInsertText;
-    Button btnOk,btnColor,btnErase;
-    ImageButton btnInfo;
+    Button btnOk,btnColor,btnErase,btnCropImage;
+    ImageButton btnInfo,btnSave;
     SeekBar sizeBrush;
     PhotoEditorView mPhotoEditorView;
     CropImageView mCropImage;
-    final int PIC_CROP=1;
+    RecyclerView rvSticker;
     public EditPhotoFragment() {
     }
 
@@ -77,27 +78,25 @@ public class EditPhotoFragment extends Fragment {
         txtInsertText = view.findViewById(R.id.txtInsertText);
         btnOk = view.findViewById(R.id.btnOk);
         btnInfo = view.findViewById(R.id.info_image);
+        btnSave = view.findViewById(R.id.btnSave);
         btnErase = view.findViewById(R.id.btnErase);
-
+        btnCropImage = view.findViewById(R.id.btnCropImage);
+        rvSticker = view.findViewById(R.id.rvSticker);
         textZone = view.findViewById(R.id.textZone);
         textZone.setVisibility(View.INVISIBLE);
-
         brushZone = view.findViewById(R.id.brush_zone);
         brushZone.setVisibility(View.INVISIBLE);
-
         customLayout = view.findViewById(R.id.CustomLayout);
         path = getArguments().getString("IMAGEPATH");
         File file = new File(path);
         Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
         mPhotoEditorView.getSource().setImageBitmap(bitmap);
-//        Typeface mTextFont = ResourcesCompat.getFont(getContext(),R.font.greatvibes_regular);
         mPhotoEditor =new PhotoEditor.Builder(getContext(),mPhotoEditorView)
                 .setPinchTextScalable(true)
-//                .setDefaultTextTypeface(mTextFont)
                 .build();
         bottomNavigationView = view.findViewById(R.id.nav_bottom_edit);
         bottomNavigationView.setOnNavigationItemSelectedListener(listener);
-        btnInfo.setOnClickListener(new View.OnClickListener() {
+        btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mPhotoEditor.saveAsFile(path, new PhotoEditor.OnSaveListener() {
@@ -107,7 +106,6 @@ public class EditPhotoFragment extends Fragment {
                         Bitmap bitmap = BitmapFactory.decodeFile(path);
                         mPhotoEditorView.getSource().setImageBitmap(bitmap);
                     }
-
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         Toast.makeText(getContext(),"Failed",Toast.LENGTH_SHORT).show();
@@ -115,7 +113,57 @@ public class EditPhotoFragment extends Fragment {
                 });
             }
         });
+        btnInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+            }
+        });
     }
+    private void showDialog() {
+        try {
+            File file = new File(path);
+            double  size = file.length()/(1024*1024);
+            DecimalFormat decimalFormat = new DecimalFormat("#.00");
+            BasicFileAttributes attr = null;
+            FileTime creationTime = null;
+            AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                attr = Files.readAttributes(Paths.get(path), BasicFileAttributes.class);
+                creationTime = attr.creationTime();
+                dialog.setTitle(R.string.Details).setMessage("" +
+                        getContext().getResources().getString(R.string.FileName)+":\n"+file.getName()+
+                        "\n"+getContext().getResources().getString(R.string.FileSize)+":\n"+decimalFormat.format(size)+" MB"+
+                        "\nDate:\n"+attr.creationTime()+
+                        "\n"+getContext().getResources().getString(+R.string.Path)+":\n"+path)
+                        .setPositiveButton(R.string.Ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .create();
+            }
+            else {
+                dialog.setTitle(R.string.Details).setMessage("" +
+                        getContext().getResources().getString(R.string.FileName)+":\n"+file.getName()+
+                        "\n"+getContext().getResources().getString(R.string.FileSize)+":\n"+decimalFormat.format(size)+" MB"+
+                        "\n"+getContext().getResources().getString(R.string.Path)+":\n"+path)
+                        .setPositiveButton(R.string.Ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .create();
+            }
+            dialog.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     private BottomNavigationView.OnNavigationItemSelectedListener listener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
@@ -129,7 +177,7 @@ public class EditPhotoFragment extends Fragment {
                     break;
                 case  R.id.nav_delete:
                     AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
-                    dialog.setTitle(R.string.Delete).setMessage("Bạn Có muốn xóa ko?").setNegativeButton(R.string.Cancel, new DialogInterface.OnClickListener() {
+                    dialog.setTitle(R.string.Delete).setMessage(getContext().getResources().getString(R.string.DeleteQuestion)).setNegativeButton(R.string.Cancel, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
@@ -152,6 +200,8 @@ public class EditPhotoFragment extends Fragment {
                     textZone.setVisibility(View.VISIBLE);
                     brushZone.setVisibility(View.INVISIBLE);
                     mCropImage.setVisibility(View.INVISIBLE);
+                    rvSticker.setVisibility(View.INVISIBLE);
+                    btnCropImage.setVisibility(View.INVISIBLE);
                     btnOk.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -165,6 +215,8 @@ public class EditPhotoFragment extends Fragment {
                     textZone.setVisibility(View.INVISIBLE);
                     brushZone.setVisibility(View.VISIBLE);
                     mCropImage.setVisibility(View.INVISIBLE);
+                    rvSticker.setVisibility(View.INVISIBLE);
+                    btnCropImage.setVisibility(View.INVISIBLE);
                     drawInImage();
                     break;
                 case R.id.nav_cut:
@@ -173,7 +225,9 @@ public class EditPhotoFragment extends Fragment {
                     textZone.setVisibility(View.INVISIBLE);
                     brushZone.setVisibility(View.INVISIBLE);
                     mCropImage.setVisibility(View.VISIBLE);
-                    cropImage(mCropImage);
+                    rvSticker.setVisibility(View.INVISIBLE);
+                    btnCropImage.setVisibility(View.VISIBLE);
+                    cropImage(mCropImage,mPhotoEditorView,mPhotoEditor  );
                     break;
                 case R.id.nav_sticker:
                     mPhotoEditor.setBrushDrawingMode(false);
@@ -181,6 +235,8 @@ public class EditPhotoFragment extends Fragment {
                     textZone.setVisibility(View.INVISIBLE);
                     brushZone.setVisibility(View.INVISIBLE);
                     mCropImage.setVisibility(View.INVISIBLE);
+                    rvSticker.setVisibility(View.VISIBLE);
+                    btnCropImage.setVisibility(View.INVISIBLE);
                     insertEmojiorImage();
                     break;
             }
@@ -188,30 +244,48 @@ public class EditPhotoFragment extends Fragment {
         }
     };
 
-    private void cropImage(final CropImageView cropImage){
+    void cropImage(final CropImageView mCropImage, final PhotoEditorView view, final PhotoEditor editor){
         File file = new File(path);
         Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-        cropImage.setImageBitmap(bitmap);
-        btnInfo.setOnClickListener(new View.OnClickListener() {
+        mCropImage.setImageBitmap(bitmap);
+        Rect rect = new Rect(3,1,1,3);
+        mCropImage.setCropRect(rect);
+        btnCropImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = Uri.parse(path);
-                cropImage.saveCroppedImageAsync(uri);
-                Toast.makeText(getContext(),"Save Success!",Toast.LENGTH_SHORT).show();
-            }
-        });
-        cropImage.setOnCropImageCompleteListener(new CropImageView.OnCropImageCompleteListener() {
-            @Override
-            public void onCropImageComplete(CropImageView view, CropImageView.CropResult result) {
-                Bitmap croped = result.getBitmap();
-                mPhotoEditorView.getSource().setImageBitmap(croped);
+                Toast.makeText(getContext(),"Cắt",Toast.LENGTH_SHORT).show();
+                Bitmap croped = mCropImage.getCroppedImage();
+                mCropImage.setImageBitmap(croped);
+                view.getSource().setImageBitmap(croped);
+                editor.saveAsFile(path, new PhotoEditor.OnSaveListener() {
+                    @Override
+                    public void onSuccess(@NonNull String imagePath) {
+                        Toast.makeText(getContext(),"Saved",Toast.LENGTH_SHORT).show();
+                        Bitmap bitmap = BitmapFactory.decodeFile(path);
+                        mPhotoEditorView.getSource().setImageBitmap(bitmap);
+                    }
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Toast.makeText(getContext(),"Failed",Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
     }
 
     private void insertEmojiorImage() {
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.ic_folder_black_24dp);
-        mPhotoEditor.addImage(bitmap);
+        int[] sticker = {
+                R.drawable.emoji_1,
+                R.drawable.emoji_2,
+                R.drawable.emoji_3,
+                R.drawable.emoji_4,
+                R.drawable.emoji_5
+        };
+        StickerRecycleAdapter adapter = new StickerRecycleAdapter(mPhotoEditor,getContext(),sticker);
+        LinearLayoutManager manager = new  LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
+        rvSticker.setLayoutManager(manager);
+        rvSticker.setHasFixedSize(true);
+        rvSticker.setAdapter(adapter);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -227,15 +301,11 @@ public class EditPhotoFragment extends Fragment {
                     mPhotoEditor.setBrushEraserSize(progress);
                 }
             }
-
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
             }
-
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
             }
         });
         btnErase.setOnClickListener(new View.OnClickListener() {

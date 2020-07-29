@@ -10,21 +10,19 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 
-import com.example.videotophotoclone.Model.TypeSetting;
 import com.example.videotophotoclone.R;
 
 public class SettingDialog extends Dialog {
     Button btnFileFormat,btnQuality,btnSize;
-    int fileFormat=0;
     String defVal = "JPG";
+    String defQuality = getContext().getResources().getString(R.string.High);
     final String TAG = "Setting dialog";
     Activity mActivity;
-//    static String type = "";
     public SettingDialog(@NonNull Activity context) {
         super(context);
         this.mActivity = context;
         setContentView(R.layout.setting_dialog);
-//        getSharedPreference();
+        getSharedPreference();
         addControls();
         addEvents();
     }
@@ -34,7 +32,9 @@ public class SettingDialog extends Dialog {
         {
             SharedPreferences sharedPreferences = mActivity.getPreferences(Context.MODE_PRIVATE);
             String type = sharedPreferences.getString("TYPE",defVal);
+            String quality = sharedPreferences.getString("QUALITY",defQuality);
             btnFileFormat.setText(type);
+            btnQuality.setText(quality);
         }
         catch (Exception e){
             Log.w(TAG,e);
@@ -50,10 +50,18 @@ public class SettingDialog extends Dialog {
                 dialog.show();
             }
         });
+        btnQuality.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                QualityDialog dialog = new QualityDialog(mActivity);
+                dialog.show();
+            }
+        });
     }
 
     private void addControls() {
         btnFileFormat = findViewById(R.id.btnFileFormat);
+        btnQuality = findViewById(R.id.btnQuality);
         getSharedPreference();
     }
 }

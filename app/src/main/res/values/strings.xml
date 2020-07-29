@@ -45,4 +45,16 @@
     <string name="AddImage">Add Image</string>
     <string name="SlideSec">Slide/Sec </string>
     <string name="Music">Music</string>
+    <string name="EnterTime">Enter time(In seconds)</string>
+    <string name="FileName">File Name</string>
+    <string name="FileSize">File Size</string>
+    <string name="Path">Path</string>
+    <string name="EditPhoto">Edit Photo</string>
+    <string name="CreateVideo">Create Video</string>
+    <string name="MusicList">Music list</string>
+    <string name="VideoToPhoto">Video to photo</string>
+    <string name="DeleteQuestion">Are you sure to delete this image?</string>
+    <string name="SaveSuccess">Saved!</string>
+    <string name="SaveFailure">Save failure!</string>
+    <string name="CropImage">Crop Image</string>
 </resources>

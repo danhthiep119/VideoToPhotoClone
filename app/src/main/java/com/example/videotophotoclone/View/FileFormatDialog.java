@@ -4,23 +4,14 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.videotophotoclone.Model.TypeSetting;
 import com.example.videotophotoclone.R;
 
 public class FileFormatDialog extends Dialog {
-//    RadioGroup rdFileFormat;
     RadioButton rdJPG,rdPNG;
-    int mode = 0;
-    final String TAG = "FileFormat:";
     Activity mContext;
     public FileFormatDialog(@NonNull Activity context) {
         super(context);

@@ -13,7 +13,6 @@ import android.widget.VideoView;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import com.example.videotophotoclone.Model.Video;
 import com.example.videotophotoclone.R;
 
 import java.io.File;

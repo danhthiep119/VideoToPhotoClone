@@ -11,11 +11,8 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.videotophotoclone.Model.Video;
 import com.example.videotophotoclone.R;
 import com.example.videotophotoclone.View.OptionDialog;
 

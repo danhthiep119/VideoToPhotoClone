@@ -46,4 +46,16 @@
     <string name="AddImage">Thêm ảnh</string>
     <string name="SlideSec">Slide/giây </string>
     <string name="Music">Nhạc</string>
+    <string name="EnterTime">Nhập thời gian(giây)</string>
+    <string name="FileName">Tên</string>
+    <string name="FileSize">Kích thước</string>
+    <string name="Path">Đường dẫn</string>
+    <string name="EditPhoto">Chỉnh sửa ảnh</string>
+    <string name="CreateVideo">Tạo video</string>
+    <string name="MusicList">Danh sách âm nhạc</string>
+    <string name="VideoToPhoto">Phim sang ảnh</string>
+    <string name="DeleteQuestion">Bạn có chắc muốn xóa hình ảnh này?</string>
+    <string name="SaveSuccess">Đã Lưu!</string>
+    <string name="SaveFailure">Lưu không thành công!</string>
+    <string name="CropImage">Cắt ảnh</string>
 </resources>
