@@ -57,4 +57,9 @@
     <string name="SaveSuccess">Saved!</string>
     <string name="SaveFailure">Save failure!</string>
     <string name="CropImage">Crop Image</string>
+    <string name="SnapEvery">Snap every</string>
+    <string name="Sec">Second</string>
+    <string name="SnapError">Please input time snap less than duration of video!</string>
+    <string name="Error">Error!</string>
+    <string name="NullTimeSnap">You <canno></canno>t set null time snap!</string>
 </resources>

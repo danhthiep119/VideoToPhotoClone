@@ -106,7 +106,7 @@ public class VideoEditFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 vdView.pause();
-                int currentTime =vdView.getCurrentPosition()*1000;
+                long currentTime =vdView.getCurrentPosition()*1000;
                 Bitmap bmFrame = mmr.getFrameAtTime(currentTime,FFmpegMediaMetadataRetriever.OPTION_CLOSEST);
                 captureImageList.add(bmFrame);
                 createFileImage(bmFrame);
@@ -227,6 +227,7 @@ public class VideoEditFragment extends Fragment {
         vdView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
+                mp.pause();
                 mp.release();
             }
         });
@@ -248,8 +249,10 @@ public class VideoEditFragment extends Fragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, final int progress, boolean fromUser) {
                 if (fromUser) {
+                    vdView.pause();
                     vdView.seekTo(progress);
                     seekBar.setProgress(progress);
+                    Bitmap bitmap = mmr.getFrameAtTime(progress*1000,FFmpegMediaMetadataRetriever.OPTION_CLOSEST);
                 }
             }
 

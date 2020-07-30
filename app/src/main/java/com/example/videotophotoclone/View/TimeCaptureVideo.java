@@ -49,21 +49,22 @@ import java.util.List;
 import wseemann.media.FFmpegMediaMetadataRetriever;
 
 
-public class TimeCaptureVideo extends Fragment{
+public class TimeCaptureVideo extends Fragment {
     List<Bitmap> listImage = new ArrayList<>();
     RangeSeekBar range_seekbar;
     VideoView vdViewTimeCapture;
-    TextView txtName,txtCurrentTime,txtEndTime;
-    ImageButton imgController,btnSnap;
-    Button btnDone,btnSetTime;
+    TextView txtName, txtCurrentTime, txtEndTime;
+    ImageButton imgController, btnSnap;
+    Button btnDone, btnSetTime;
     ImageView imgSnap;
-    String path,endWiths;
+    String path, endWiths;
     public int duration = 2000;
     String type = "";
     String quality = "";
     FFmpegMediaMetadataRetriever mmr = new FFmpegMediaMetadataRetriever();
-    final String TAG="TimeCapture";
+    final String TAG = "TimeCapture";
     volatile boolean stopThread = false;
+
     public TimeCaptureVideo(String path) {
         // Required empty public constructor
         this.path = path;
@@ -73,8 +74,8 @@ public class TimeCaptureVideo extends Fragment{
     public void onStart() {
         super.onStart();
         SharedPreferences mShared = getActivity().getPreferences(Context.MODE_PRIVATE);
-        type = mShared.getString("TYPE","JPG");
-        quality = mShared.getString("QUALITY","High");
+        type = mShared.getString("TYPE", "JPG");
+        quality = mShared.getString("QUALITY", "High");
     }
 
     @Override
@@ -105,35 +106,44 @@ public class TimeCaptureVideo extends Fragment{
         Uri uri = Uri.parse(path);
         vdViewTimeCapture.setVideoURI(uri);
         mmr.setDataSource(path);
+        btnSetTime.setText(getContext().getResources().getString(R.string.SnapEvery) + " "
+                + (float) duration / 1000 + " "
+                + getContext().getResources().getString(R.string.Sec));
         vdViewTimeCapture.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
-                txtCurrentTime.setText(MilisecondsToTimer(vdViewTimeCapture.getCurrentPosition()/1000));
-                txtEndTime.setText(MilisecondsToTimer(vdViewTimeCapture.getDuration()/1000));
-                range_seekbar.setRangeValues(0,mp.getDuration()/1000);
+                txtCurrentTime.setText(MilisecondsToTimer(vdViewTimeCapture.getCurrentPosition() / 1000));
+                txtEndTime.setText(MilisecondsToTimer(vdViewTimeCapture.getDuration() / 1000));
+                range_seekbar.setRangeValues(0, mp.getDuration() / 1000);
                 range_seekbar.setEnabled(true);
             }
         });
         range_seekbar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
             @Override
             public void onRangeSeekBarValuesChanged(final RangeSeekBar bar, Object minValue, Object maxValue) {
-                vdViewTimeCapture.seekTo((int)minValue*1000);
-                int max_duration = (int)bar.getSelectedMaxValue();
-                int min_duration = (int)bar.getSelectedMinValue();
+                vdViewTimeCapture.seekTo((int) minValue * 1000);
+                final int max_duration = (int) bar.getSelectedMaxValue();
+                final int min_duration = (int) bar.getSelectedMinValue();
                 txtEndTime.setText(MilisecondsToTimer(max_duration));
                 txtCurrentTime.setText(MilisecondsToTimer(min_duration));
                 btnSnap.setOnClickListener(new View.OnClickListener() {
                     @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onClick(View v) {
-                        for(int currentTime = vdViewTimeCapture.getCurrentPosition()+duration;
-                            currentTime <= (int)bar.getSelectedMaxValue()*1000;
-                            currentTime+=duration){
-                            Bitmap bmFrame = mmr.getFrameAtTime(currentTime*1000,FFmpegMediaMetadataRetriever.OPTION_CLOSEST);
+                        for (int currentTime = vdViewTimeCapture.getCurrentPosition() + duration;
+                             currentTime <= (int) bar.getSelectedMaxValue() * 1000;
+                             currentTime += duration) {
+                            Bitmap bmFrame = mmr.getFrameAtTime(currentTime * 1000, FFmpegMediaMetadataRetriever.OPTION_CLOSEST);
                             listImage.add(bmFrame);
                             createImage(bmFrame);
                         }
-                        imgSnap.setImageBitmap(listImage.get(listImage.size()-1));
+                        imgSnap.setImageBitmap(listImage.get(listImage.size() - 1));
+                    }
+                });
+                btnSetTime.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openDialog(min_duration, max_duration);
                     }
                 });
             }
@@ -154,18 +164,17 @@ public class TimeCaptureVideo extends Fragment{
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while (vdViewTimeCapture != null){
-                    if(vdViewTimeCapture.isPlaying()){
+                while (vdViewTimeCapture != null) {
+                    if (vdViewTimeCapture.isPlaying()) {
+                        Message msg = new Message();
+                        msg.what = vdViewTimeCapture.getCurrentPosition();
+                        handler.sendMessage(msg);
+                    } else {
                         Message msg = new Message();
                         msg.what = vdViewTimeCapture.getCurrentPosition();
                         handler.sendMessage(msg);
                     }
-                    else {
-                        Message msg = new Message();
-                        msg.what = vdViewTimeCapture.getCurrentPosition();
-                        handler.sendMessage(msg);
-                    }
-                    if(stopThread){
+                    if (stopThread) {
                         return;
                     }
                     try {
@@ -189,7 +198,7 @@ public class TimeCaptureVideo extends Fragment{
         btnSetTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openDialog();
+                openDialog(0, vdViewTimeCapture.getDuration());
             }
         });
         imgController.setOnClickListener(new View.OnClickListener() {
@@ -201,11 +210,11 @@ public class TimeCaptureVideo extends Fragment{
         });
     }
 
-    private void openDialog() {
+    private void openDialog(final int min, final int max) {
         final EditText txtDuration;
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.set_time_dialog,null);
-        txtDuration=view.findViewById(R.id.txtDuration);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.set_time_dialog, null);
+        txtDuration = view.findViewById(R.id.txtDuration);
         builder.setView(view)
                 .setTitle(R.string.EnterDuration)
                 .setNegativeButton(R.string.Cancel, new DialogInterface.OnClickListener() {
@@ -217,11 +226,26 @@ public class TimeCaptureVideo extends Fragment{
                 .setPositiveButton(R.string.Ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                       if(!txtDuration.getText().toString().isEmpty()){
-                           duration = (int) (Float.parseFloat(txtDuration.getText().toString())*1000);
-                           Log.w(TAG, String.valueOf(duration));
-                       }
-                       else Toast.makeText(getContext(),"Bạn Chưa nhập Thời gian",Toast.LENGTH_SHORT).show();
+                        if (!txtDuration.getText().toString().isEmpty()) {
+                            duration = (int) (Float.parseFloat(txtDuration.getText().toString()) * 1000);
+                            Log.w(TAG, String.valueOf((max-min)*1000));
+                            if ((duration/1000) > (max - min)) {
+                                final AlertDialog.Builder errorDialog = new AlertDialog.Builder(getContext());
+                                errorDialog.setTitle(R.string.Error)
+                                        .setMessage(R.string.SnapError)
+                                        .setPositiveButton(R.string.Ok, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                errorDialog.create();
+                            } else
+                                btnSetTime.setText(getContext().getResources().getString(R.string.SnapEvery) + " "
+                                        + (float) duration / 1000 + " "
+                                        + getContext().getResources().getString(R.string.Sec));
+                        } else
+                            Toast.makeText(getContext(), getResources().getString(R.string.NullTimeSnap), Toast.LENGTH_SHORT).show();
                     }
                 }).create();
         builder.show();
@@ -238,12 +262,12 @@ public class TimeCaptureVideo extends Fragment{
         btnDone = view.findViewById(R.id.btnDone);
         btnSnap = view.findViewById(R.id.btnSnap);
         imgSnap = view.findViewById(R.id.imgSnap);
-        btnSetTime.setText("Snap every "+(float)duration/1000+" sec");
+//        btnSetTime.setText("Snap every "+(float)duration/1000+" sec");
     }
 
     private void createImage(Bitmap bmFrame) {
-        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/ScreenShots");
-        if(!file.exists()){
+        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/ScreenShots");
+        if (!file.exists()) {
             file.mkdirs();
         }
         DateTimeFormatter formatter = null;
@@ -251,57 +275,56 @@ public class TimeCaptureVideo extends Fragment{
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
-            fileName = String.format(formatter.format(now)+endWiths);
-        }
-        else fileName = System.currentTimeMillis()+endWiths;
+            fileName = String.format(formatter.format(now) + endWiths);
+        } else fileName = System.currentTimeMillis() + endWiths;
         Bitmap.CompressFormat bitmap = Bitmap.CompressFormat.JPEG;
-        if(type.equals("JPG")){
+        if (type.equals("JPG")) {
             endWiths = ".jpg";
             bitmap = Bitmap.CompressFormat.JPEG;
         }
-        if(type.equals("PNG")){
+        if (type.equals("PNG")) {
             endWiths = ".png";
             bitmap = Bitmap.CompressFormat.PNG;
         }
-        File outFile = new File(file,fileName);
+        File outFile = new File(file, fileName);
         try {
-            if(bmFrame!=null) {
+            if (bmFrame != null) {
                 FileOutputStream fos = new FileOutputStream(outFile);
                 bmFrame.compress(bitmap, setQuality(quality), fos);
                 fos.flush();
                 fos.close();
             }
         } catch (FileNotFoundException e) {
-            Log.w(TAG,e);
+            Log.w(TAG, e);
         } catch (IOException e) {
-            Log.w(TAG,e);
+            Log.w(TAG, e);
         }
     }
 
-    int setQuality(String quality){
-        if(quality.equals(R.string.Best)){
+    int setQuality(String quality) {
+        if (quality.equals(R.string.Best)) {
             return 100;
         }
-        if(quality.equals(R.string.VeryHigh)){
+        if (quality.equals(R.string.VeryHigh)) {
             return 85;
         }
-        if(quality.equals(R.string.High)){
+        if (quality.equals(R.string.High)) {
             return 75;
         }
-        if(quality.equals(R.string.Medium)){
+        if (quality.equals(R.string.Medium)) {
             return 65;
         }
-        if(quality.equals(R.string.Low)){
+        if (quality.equals(R.string.Low)) {
             return 50;
         }
         return 75;
     }
 
-    private Handler handler =  new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(@NonNull Message msg) {
-            txtCurrentTime.setText(MilisecondsToTimer(msg.what/1000));
-            range_seekbar.setSelectedMinValue(msg.what/1000);
+            txtCurrentTime.setText(MilisecondsToTimer(msg.what / 1000));
+            range_seekbar.setSelectedMinValue(msg.what / 1000);
         }
     };
 

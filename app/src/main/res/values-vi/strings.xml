@@ -58,4 +58,9 @@
     <string name="SaveSuccess">Đã Lưu!</string>
     <string name="SaveFailure">Lưu không thành công!</string>
     <string name="CropImage">Cắt ảnh</string>
+    <string name="SnapEvery">Chụp sau mỗi</string>
+    <string name="Sec">giây</string>
+    <string name="SnapError">Mời bạn nhập thời gian nhỏ hơn thời lượng phim!</string>
+    <string name="Error">Lỗi!</string>
+    <string name="NullTimeSnap">Bạn không thể để trống thời gian chụp!</string>
 </resources>
