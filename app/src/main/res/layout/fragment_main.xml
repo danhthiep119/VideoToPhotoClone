@@ -158,7 +158,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:menu="@menu/item_botom_navigation"
-            android:background="@color/colorForest"
+            android:background="@color/colorYellow"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

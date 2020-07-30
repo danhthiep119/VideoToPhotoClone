@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".View.MainActivity">
+    tools:context=".View.MainActivity"
+    android:background="@color/colorForest">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/CustomLayout"
@@ -127,11 +128,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="?android:attr/windowBackground"
+            android:background="@color/colorYellow"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:menu="@menu/item_image" />
+            app:menu="@menu/item_image"
+
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
