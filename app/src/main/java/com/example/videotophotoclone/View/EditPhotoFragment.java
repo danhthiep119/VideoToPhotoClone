@@ -1,7 +1,9 @@
 package com.example.videotophotoclone.View;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -9,6 +11,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,10 +27,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.videotophotoclone.Controler.ColorTextAdapter;
 import com.example.videotophotoclone.Controler.StickerRecycleAdapter;
 import com.example.videotophotoclone.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -46,14 +51,14 @@ import ja.burhanrashid52.photoeditor.PhotoEditorView;
 
 public class EditPhotoFragment extends Fragment {
     BottomNavigationView bottomNavigationView;
-    static String path="";
+    static String path = "";
     ConstraintLayout customLayout;
     PhotoEditor mPhotoEditor;
     Typeface mTextFont;
-    LinearLayout textZone,brushZone;
+    LinearLayout textZone, brushZone;
     EditText txtInsertText;
-    Button btnOk,btnColor,btnErase,btnCropImage;
-    ImageButton btnInfo,btnSave;
+    Button btnOk, btnColor, btnErase, btnCropImage,btnColorText;
+    ImageButton btnInfo, btnSave;
     SeekBar sizeBrush;
     PhotoEditorView mPhotoEditorView;
     CropImageView mCropImage;
@@ -80,6 +85,8 @@ public class EditPhotoFragment extends Fragment {
         btnInfo = view.findViewById(R.id.info_image);
         btnSave = view.findViewById(R.id.btnSave);
         btnErase = view.findViewById(R.id.btnErase);
+        btnColor = view.findViewById(R.id.btnColor);
+        btnColorText = view.findViewById(R.id.btnColorText);
         btnCropImage = view.findViewById(R.id.btnCropImage);
         rvSticker = view.findViewById(R.id.rvSticker);
         textZone = view.findViewById(R.id.textZone);
@@ -91,7 +98,7 @@ public class EditPhotoFragment extends Fragment {
         File file = new File(path);
         Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
         mPhotoEditorView.getSource().setImageBitmap(bitmap);
-        mPhotoEditor =new PhotoEditor.Builder(getContext(),mPhotoEditorView)
+        mPhotoEditor = new PhotoEditor.Builder(getContext(), mPhotoEditorView)
                 .setPinchTextScalable(true)
                 .build();
         bottomNavigationView = view.findViewById(R.id.nav_bottom_edit);
@@ -99,16 +106,27 @@ public class EditPhotoFragment extends Fragment {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
                 mPhotoEditor.saveAsFile(path, new PhotoEditor.OnSaveListener() {
                     @Override
                     public void onSuccess(@NonNull String imagePath) {
-                        Toast.makeText(getContext(),"Saved",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Saved", Toast.LENGTH_SHORT).show();
                         Bitmap bitmap = BitmapFactory.decodeFile(path);
                         mPhotoEditorView.getSource().setImageBitmap(bitmap);
                     }
+
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        Toast.makeText(getContext(),"Failed",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Failed", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -120,22 +138,37 @@ public class EditPhotoFragment extends Fragment {
             }
         });
     }
+
     private void showDialog() {
         try {
             File file = new File(path);
-            double  size = file.length()/(1024*1024);
+            double size = file.length() / (1024 * 1024);
             DecimalFormat decimalFormat = new DecimalFormat("#.00");
+            String endwith = "";
+            String filesize = "";
             BasicFileAttributes attr = null;
             FileTime creationTime = null;
+            Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+
+            if(size>1024){
+                decimalFormat = new DecimalFormat("#.00");
+                filesize = decimalFormat.format(size);
+                endwith = " MB";
+            }
+            else {
+                filesize = String.valueOf(size);
+                endwith = " Kb";
+            }
             AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 attr = Files.readAttributes(Paths.get(path), BasicFileAttributes.class);
                 creationTime = attr.creationTime();
                 dialog.setTitle(R.string.Details).setMessage("" +
-                        getContext().getResources().getString(R.string.FileName)+":\n"+file.getName()+
-                        "\n"+getContext().getResources().getString(R.string.FileSize)+":\n"+decimalFormat.format(size)+" MB"+
-                        "\nDate:\n"+attr.creationTime()+
-                        "\n"+getContext().getResources().getString(+R.string.Path)+":\n"+path)
+                        getContext().getResources().getString(R.string.FileName) + ":\n" + file.getName() +
+                        "\n" + getContext().getResources().getString(R.string.FileSize) + ":\n" + filesize + endwith +
+                        "\n"+ R.string.Resolution+":\n"+bitmap.getHeight()+" x "+bitmap.getWidth()+
+                        "\nDate:\n" + attr.creationTime() +
+                        "\n" + getContext().getResources().getString(+R.string.Path) + ":\n" + path)
                         .setPositiveButton(R.string.Ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -143,12 +176,12 @@ public class EditPhotoFragment extends Fragment {
                             }
                         })
                         .create();
-            }
-            else {
+            } else {
                 dialog.setTitle(R.string.Details).setMessage("" +
-                        getContext().getResources().getString(R.string.FileName)+":\n"+file.getName()+
-                        "\n"+getContext().getResources().getString(R.string.FileSize)+":\n"+decimalFormat.format(size)+" MB"+
-                        "\n"+getContext().getResources().getString(R.string.Path)+":\n"+path)
+                        getContext().getResources().getString(R.string.FileName) + ":\n" + file.getName() +
+                        "\n" + getContext().getResources().getString(R.string.FileSize) + ":\n" + filesize + endwith +
+                        "\n"+ R.string.Resolution+":\n"+bitmap.getWidth()+" x "+bitmap.getHeight()+
+                        "\n" + getContext().getResources().getString(R.string.Path) + ":\n" + path)
                         .setPositiveButton(R.string.Ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -168,14 +201,14 @@ public class EditPhotoFragment extends Fragment {
         @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()){
+            switch (item.getItemId()) {
                 case R.id.nav_edit:
                     bottomNavigationView.getMenu().removeItem(R.id.nav_share);
                     bottomNavigationView.getMenu().removeItem(R.id.nav_delete);
                     bottomNavigationView.getMenu().removeItem(R.id.nav_edit);
                     bottomNavigationView.inflateMenu(R.menu.item_edit_bottom);
                     break;
-                case  R.id.nav_delete:
+                case R.id.nav_delete:
                     AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
                     dialog.setTitle(R.string.Delete).setMessage(getContext().getResources().getString(R.string.DeleteQuestion)).setNegativeButton(R.string.Cancel, new DialogInterface.OnClickListener() {
                         @Override
@@ -205,8 +238,15 @@ public class EditPhotoFragment extends Fragment {
                     btnOk.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mPhotoEditor.addText(mTextFont,txtInsertText.getText().toString(),Color.parseColor("#FFFFFF"));
+                            mPhotoEditor.addText(mTextFont, txtInsertText.getText().toString(), Color.parseColor("#FFFFFF"));
                             txtInsertText.setText("");
+                        }
+                    });
+                    btnColorText.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            TextColorDialog dialog = new TextColorDialog(getActivity(),btnColorText,txtInsertText,mPhotoEditor);
+                            dialog.show();
                         }
                     });
                     break;
@@ -227,7 +267,7 @@ public class EditPhotoFragment extends Fragment {
                     mCropImage.setVisibility(View.VISIBLE);
                     rvSticker.setVisibility(View.INVISIBLE);
                     btnCropImage.setVisibility(View.VISIBLE);
-                    cropImage(mCropImage,mPhotoEditorView,mPhotoEditor  );
+                    cropImage(mCropImage, mPhotoEditorView, mPhotoEditor);
                     break;
                 case R.id.nav_sticker:
                     mPhotoEditor.setBrushDrawingMode(false);
@@ -244,29 +284,40 @@ public class EditPhotoFragment extends Fragment {
         }
     };
 
-    void cropImage(final CropImageView mCropImage, final PhotoEditorView view, final PhotoEditor editor){
+    void cropImage(final CropImageView mCropImage, final PhotoEditorView view, final PhotoEditor editor) {
         File file = new File(path);
         Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
         mCropImage.setImageBitmap(bitmap);
-        Rect rect = new Rect(3,1,1,3);
+        Rect rect = new Rect(3, 1, 1, 3);
         mCropImage.setCropRect(rect);
         btnCropImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(),"Cắt",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Cắt", Toast.LENGTH_SHORT).show();
                 Bitmap croped = mCropImage.getCroppedImage();
                 mCropImage.setImageBitmap(croped);
                 view.getSource().setImageBitmap(croped);
+                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
                 editor.saveAsFile(path, new PhotoEditor.OnSaveListener() {
                     @Override
                     public void onSuccess(@NonNull String imagePath) {
-                        Toast.makeText(getContext(),"Saved",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Saved", Toast.LENGTH_SHORT).show();
                         Bitmap bitmap = BitmapFactory.decodeFile(path);
                         mPhotoEditorView.getSource().setImageBitmap(bitmap);
                     }
+
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        Toast.makeText(getContext(),"Failed",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Failed", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -290,9 +341,11 @@ public class EditPhotoFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void drawInImage() {
+        final String color = "#000000";
         mPhotoEditor.setBrushDrawingMode(true);
         sizeBrush.setMax((int) 24.0f);
         sizeBrush.setMin((int) 1.0f);
+        mPhotoEditor.setBrushSize(1);
         sizeBrush.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -314,6 +367,14 @@ public class EditPhotoFragment extends Fragment {
                 mPhotoEditor.brushEraser();
             }
         });
-        mPhotoEditor.setBrushColor(Color.parseColor("#FFFFFF"));
+        btnColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ColorDialog dialog = new ColorDialog(getActivity(),btnColor,mPhotoEditor);
+                dialog.show();
+                System.out.println(color);
+            }
+        });
+        mPhotoEditor.setBrushColor(Color.parseColor(color));
     }
 }

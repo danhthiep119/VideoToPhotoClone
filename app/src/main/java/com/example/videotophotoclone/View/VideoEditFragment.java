@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -58,6 +59,7 @@ public class VideoEditFragment extends Fragment {
     String type = "";
     String quality = "";
     String videoPath="";
+    String size="";
     static String endWiths = ".jpg";
     FFmpegMediaMetadataRetriever mmr = new FFmpegMediaMetadataRetriever();
     volatile boolean stopthread = false;
@@ -72,7 +74,6 @@ public class VideoEditFragment extends Fragment {
         SharedPreferences mShared = getActivity().getPreferences(Context.MODE_PRIVATE);
         type = mShared.getString("TYPE","JPG");
         quality = mShared.getString("QUALITY",getContext().getResources().getString(R.string.High));
-        System.out.println(quality);
     }
 
     @Override
@@ -100,6 +101,7 @@ public class VideoEditFragment extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
 
         btnSnap.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.P)
@@ -129,6 +131,7 @@ public class VideoEditFragment extends Fragment {
                 stopthread = true;
                 NavController nav = Navigation.findNavController(v);
                 nav.navigate(R.id.action_tabVideoFragment_to_galleryFragment);
+
             }
         });
         imgSnap.setOnClickListener(new View.OnClickListener() {

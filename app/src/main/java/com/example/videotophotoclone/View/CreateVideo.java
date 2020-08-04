@@ -90,13 +90,14 @@ public class CreateVideo extends Fragment {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.nav_add_more_photo:
+                        passingData(view,listImage,R.id.action_createVideo_to_slideshowMakerFragment);
                         break;
                     case R.id.nav_set_slide_per_sec:
                         setDuration();
                         System.out.println(duration);
                         break;
                     case R.id.nav_music:
-                        passingData(view, listImage);
+                        passingData(view, listImage,R.id.action_createVideo_to_musicList);
                         break;
                 }
                 return true;
@@ -118,12 +119,12 @@ public class CreateVideo extends Fragment {
 //        mffmpeg.execute(total);
     }
 
-    private void passingData(View view, ArrayList<String> listImage) {
+    private void passingData(View view, ArrayList<String> listImage,int id) {
         try {
             Bundle bundle = new Bundle();
             bundle.putStringArrayList("IMAGESELECTED", listImage);
             NavController nav = Navigation.findNavController(view);
-            nav.navigate(R.id.action_createVideo_to_musicList, bundle);
+            nav.navigate(id, bundle);
         } catch (Exception e) {
 
         }

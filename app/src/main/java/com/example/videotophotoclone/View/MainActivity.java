@@ -25,7 +25,7 @@ import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
     NavController navController;
-    public Toolbar toolbar;
+    Toolbar toolbar,slideToolbar;
     final int REQUEST_CODE = 1;
     final String defType = "JPG";
     final String defQuality = "High";
@@ -39,7 +39,12 @@ public class MainActivity extends AppCompatActivity {
         createFolder();
         readDataSharedReference();
         toolbar = findViewById(R.id.my_toolbar);
+        slideToolbar = findViewById(R.id.slide_toolbar);
         //Điều hướng navigation
+        navigationUI(toolbar);
+    }
+
+    public void navigationUI(Toolbar toolbar){
         navController= Navigation.findNavController(this,R.id.fragment);
         AppBarConfiguration configuration=new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupWithNavController(toolbar,navController,configuration);

@@ -63,4 +63,5 @@
     <string name="SnapError">Mời bạn nhập thời gian nhỏ hơn thời lượng phim!</string>
     <string name="Error">Lỗi!</string>
     <string name="NullTimeSnap">Bạn không thể để trống thời gian chụp!</string>
+    <string name="Resolution">Độ phân giải</string>
 </resources>

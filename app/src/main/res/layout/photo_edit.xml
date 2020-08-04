@@ -101,11 +101,16 @@
 
             <EditText
                 android:id="@+id/txtInsertText"
-                android:layout_width="300dp"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:hint="Nhập Chữ vào!!"
                 android:textSize="24dp" />
 
+            <Button
+                android:id="@+id/btnColorText"
+                android:layout_width="75dp"
+                android:layout_height="match_parent"
+                android:background="@color/black" />
             <Button
                 android:id="@+id/btnOk"
                 style="@style/Widget.MaterialComponents.Button.TextButton"

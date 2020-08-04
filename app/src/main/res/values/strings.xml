@@ -61,5 +61,6 @@
     <string name="Sec">Second</string>
     <string name="SnapError">Please input time snap less than duration of video!</string>
     <string name="Error">Error!</string>
-    <string name="NullTimeSnap">You <canno></canno>t set null time snap!</string>
+    <string name="NullTimeSnap">You cant set null time snap!</string>
+    <string name="Resolution">Resolution</string>
 </resources>

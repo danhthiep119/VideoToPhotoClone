@@ -16,13 +16,13 @@ public class SettingDialog extends Dialog {
     Button btnFileFormat,btnQuality,btnSize;
     String defVal = "JPG";
     String defQuality = getContext().getResources().getString(R.string.High);
+    String defSize = "1x";
     final String TAG = "Setting dialog";
     Activity mActivity;
     public SettingDialog(@NonNull Activity context) {
         super(context);
         this.mActivity = context;
         setContentView(R.layout.setting_dialog);
-        getSharedPreference();
         addControls();
         addEvents();
     }
@@ -33,8 +33,10 @@ public class SettingDialog extends Dialog {
             SharedPreferences sharedPreferences = mActivity.getPreferences(Context.MODE_PRIVATE);
             String type = sharedPreferences.getString("TYPE",defVal);
             String quality = sharedPreferences.getString("QUALITY",defQuality);
+            String size =sharedPreferences.getString("SIZE",defSize);
             btnFileFormat.setText(type);
             btnQuality.setText(quality);
+            btnSize.setText(size);
         }
         catch (Exception e){
             Log.w(TAG,e);
@@ -46,14 +48,21 @@ public class SettingDialog extends Dialog {
         btnFileFormat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FileFormatDialog dialog = new FileFormatDialog(mActivity);
+                FileFormatDialog dialog = new FileFormatDialog(mActivity,btnFileFormat);
                 dialog.show();
             }
         });
         btnQuality.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                QualityDialog dialog = new QualityDialog(mActivity);
+                QualityDialog dialog = new QualityDialog(mActivity,btnQuality);
+                dialog.show();
+            }
+        });
+        btnSize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SizeDialog dialog = new SizeDialog(mActivity,btnSize);
                 dialog.show();
             }
         });
@@ -62,6 +71,7 @@ public class SettingDialog extends Dialog {
     private void addControls() {
         btnFileFormat = findViewById(R.id.btnFileFormat);
         btnQuality = findViewById(R.id.btnQuality);
+        btnSize = findViewById(R.id.btnSize);
         getSharedPreference();
     }
 }

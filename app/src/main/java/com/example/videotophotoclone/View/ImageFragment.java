@@ -10,6 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.videotophotoclone.Controler.ImageAdapter;
 import com.example.videotophotoclone.R;
@@ -26,11 +29,27 @@ public class ImageFragment extends Fragment {
     List<File> imageList = new ArrayList<>();
     String path = "";
     ImageAdapter adapter;
+    public ImageButton btnDel,btnReload,btnShare;
+    public LinearLayout SelectedZone;
+    public TextView txtNumSelected;
+    private GridView gvImageList;
+    static int index;
     public ImageFragment(String path) {
         // Required empty public constructor
         this.path = path;
     }
 
+    @Override
+    public void onResume() {
+        gvImageList.setSelection(index);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        index = gvImageList.getVisibility();
+        super.onPause();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,7 +62,13 @@ public class ImageFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         imageList.clear();
-        GridView gvImageList = view.findViewById(R.id.gvListImage);
+        gvImageList = view.findViewById(R.id.gvListImage);
+        btnDel = view.findViewById(R.id.btnDel);
+        btnReload = view.findViewById(R.id.btnReload);
+        btnShare = view.findViewById(R.id.btnShare);
+        SelectedZone = view.findViewById(R.id.SelectedZone);
+        txtNumSelected = view.findViewById(R.id.txtNumSelected);
+        SelectedZone.setVisibility(View.INVISIBLE);
         File file = new File(path);
         File[] files = file.listFiles();
         for(File f :files){
@@ -51,7 +76,7 @@ public class ImageFragment extends Fragment {
                 imageList.add(f);
             }
         }
-        adapter=new ImageAdapter(imageList,getContext(),R.id.action_galleryFragment_to_editPhotoFragment2);
+        adapter=new ImageAdapter(imageList,getContext(),R.id.action_galleryFragment_to_editPhotoFragment2,false,false,this);
         gvImageList.setAdapter(adapter);
     }
 }

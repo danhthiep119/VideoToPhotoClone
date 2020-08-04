@@ -27,6 +27,7 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import com.example.videotophotoclone.Controler.FolderRecycleView;
+import com.example.videotophotoclone.Controler.GetImageAdapter;
 import com.example.videotophotoclone.Controler.ImageAdapter;
 import com.example.videotophotoclone.R;
 
@@ -41,7 +42,7 @@ import java.util.List;
 public class SlideshowMakerFragment extends Fragment {
     List<File> folderList = new ArrayList<>();
     static List<File> imageList = new ArrayList<>();
-    List<File> imageSelected = new ArrayList<>();
+    public List<File> imageSelected = new ArrayList<>();
     Button btnClear, btnCreate;
     GridView GvImage, GvSelected;
     RecyclerView GvFolder;
@@ -60,18 +61,6 @@ public class SlideshowMakerFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        Log.w(TAG, "onResume");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.w(TAG, "onPause");
-    }
-
-    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         GvFolder = view.findViewById(R.id.GvFolder);
@@ -81,14 +70,18 @@ public class SlideshowMakerFragment extends Fragment {
         btnCreate = view.findViewById(R.id.btnCreate);
         File file = Environment.getExternalStorageDirectory();
         folderList.clear();
+        try{
+            getData();
+        }
+        catch (Exception e){
+
+        }
         storingFolderExternal(file);
         try {
             getImage(imageList);
         } catch (Exception e) {
-            Log.w(TAG,e);
+            Log.w(TAG, e);
         }
-
-        imageSelected.clear();
         btnClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,35 +91,23 @@ public class SlideshowMakerFragment extends Fragment {
                 }
             }
         });
-        GvImage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), "Bạn Chọn 1" + imageList.get(position).getAbsolutePath(), Toast.LENGTH_SHORT).show();
-                imageSelected.add(imageList.get(position));
-                selectedImage(imageSelected);
-            }
+    }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+    private void getData() {
+        ArrayList<String> imageList = getArguments().getStringArrayList("IMAGESELECTED");
+        for (String path:imageList){
+            File file = new File(path);
+            imageSelected.add(file);
+        }
+        selectedImage();
     }
 
     private void getImage(final List<File> imageList) {
-        if(!imageList.isEmpty()) {
-            ImageAdapter adapter1;
-            adapter1 = new ImageAdapter(imageList, getContext(), 0);
+        if (!imageList.isEmpty()) {
+            GetImageAdapter adapter1;
+            adapter1 = new GetImageAdapter(imageList, getContext(), this);
             GvImage.setAdapter(adapter1);
         }
-        GvImage.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), "Bạn Chọn 1" + imageList.get(position).getAbsolutePath(), Toast.LENGTH_SHORT).show();
-                imageSelected.add(imageList.get(position));
-                selectedImage(imageSelected);
-            }
-        });
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,14 +127,18 @@ public class SlideshowMakerFragment extends Fragment {
         nav.navigate(R.id.action_slideshowMakerFragment_to_createVideo, bundle);
     }
 
-    void selectedImage(List<File> imageSelected) {
-        try {
-            adapter = new ImageAdapter(imageSelected, getContext(), 0);
-            GvSelected.setAdapter(adapter);
-        } catch (Exception e) {
-            Log.w(TAG, "" + e);
-        }
-
+    public void selectedImage() {
+        adapter = new ImageAdapter(imageSelected, getContext(), 0,false,true,null);
+        GvSelected.setAdapter(adapter);
+        btnClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!imageSelected.isEmpty()) {
+                    imageSelected.clear();
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
     }
 
     public void getListImage(String path) {

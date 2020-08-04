@@ -2,7 +2,24 @@
 <androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".View.MainActivity">
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/my_toolbarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+        <com.google.android.material.appbar.MaterialToolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:id="@+id/slide_toolbar"
+            app:title="VideoToPhoto"
+            app:menu="@menu/item_slideshows"
+            />
+    </com.google.android.material.appbar.AppBarLayout>
 
 </androidx.appcompat.widget.Toolbar>

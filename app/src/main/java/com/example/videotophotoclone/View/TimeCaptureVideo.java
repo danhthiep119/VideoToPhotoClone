@@ -116,6 +116,12 @@ public class TimeCaptureVideo extends Fragment {
                 txtEndTime.setText(MilisecondsToTimer(vdViewTimeCapture.getDuration() / 1000));
                 range_seekbar.setRangeValues(0, mp.getDuration() / 1000);
                 range_seekbar.setEnabled(true);
+                btnSetTime.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openDialog(0,vdViewTimeCapture.getDuration()/1000);
+                    }
+                });
             }
         });
         range_seekbar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
@@ -228,9 +234,8 @@ public class TimeCaptureVideo extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         if (!txtDuration.getText().toString().isEmpty()) {
                             duration = (int) (Float.parseFloat(txtDuration.getText().toString()) * 1000);
-                            Log.w(TAG, String.valueOf((max-min)*1000));
                             if ((duration/1000) > (max - min)) {
-                                final AlertDialog.Builder errorDialog = new AlertDialog.Builder(getContext());
+                                AlertDialog.Builder errorDialog = new AlertDialog.Builder(getContext());
                                 errorDialog.setTitle(R.string.Error)
                                         .setMessage(R.string.SnapError)
                                         .setPositiveButton(R.string.Ok, new DialogInterface.OnClickListener() {
@@ -240,12 +245,25 @@ public class TimeCaptureVideo extends Fragment {
                                             }
                                         });
                                 errorDialog.create();
+                                errorDialog.show();
                             } else
                                 btnSetTime.setText(getContext().getResources().getString(R.string.SnapEvery) + " "
                                         + (float) duration / 1000 + " "
                                         + getContext().getResources().getString(R.string.Sec));
                         } else
-                            Toast.makeText(getContext(), getResources().getString(R.string.NullTimeSnap), Toast.LENGTH_SHORT).show();
+                        {
+                            AlertDialog.Builder errorDialog = new AlertDialog.Builder(getContext());
+                            errorDialog.setTitle(R.string.Error)
+                                    .setMessage(R.string.NullTimeSnap)
+                                    .setPositiveButton(R.string.Ok, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            errorDialog.create();
+                            errorDialog.show();
+                        }
                     }
                 }).create();
         builder.show();

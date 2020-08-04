@@ -47,8 +47,7 @@ public class ImageListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         GridView gvListImage = view.findViewById(R.id.gvListImage);
         readImageFromExternalStorage();
-//        adapter = new ImageAdapter(R.id.action_imageListFragment_to_editPhotoFragment2);
-        adapter = new ImageAdapter(imageList,getContext(),R.id.action_imageListFragment_to_editPhotoFragment2);
+        adapter = new ImageAdapter(imageList,getContext(),R.id.action_imageListFragment_to_editPhotoFragment2,false,false,null);
         gvListImage.setAdapter(adapter);
     }
 

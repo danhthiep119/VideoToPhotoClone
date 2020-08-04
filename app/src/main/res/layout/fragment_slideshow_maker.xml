@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:orientation="vertical"
-            android:numColumns="auto_fit"
+            android:numColumns="3"
             app:layout_constraintBottom_toTopOf="@+id/btnClear"
             />
         <Button
